@@ -43,6 +43,7 @@
      &               FP0(4,KMAX),FD0(4,KMAX),TBLIST,DTB,KBLIST(KMAX),
      &               KSLOW(KMAX),NAME(NMAX),LIST(LMAX,NMAX)
 *
+*
 *       Open unit #J by reading dummy and rewinding.
       REWIND J
       READ (J,ERR=10,END=10)  DUMMY

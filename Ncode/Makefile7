@@ -51,7 +51,7 @@ reduce.f ffdot.f reinit.f setsys.f tchain.f xcpred.f xtpert.f \
 arc.f pnpert.f xtpert2.f bhstat.f bhstab.f emax1.f \
 grbin.f inject.f infall.f decorr.f chterm2.f cpertx.f cpertj.f kcpert.f \
 brake4.f ksrot.f deform2.f expand2.f renew.f \
-circ.f spinup.f \
+circ.f spinup.f fnfw.f \
 newton.f ksintp.f kspert2.f pnpert2.f
 # five dummy routines in dir Ncode to enable block-step version.
 

@@ -83,6 +83,7 @@
 *       Obtain stellar parameters at current epoch.
           IF(KZ(12).EQ.2)THEN
              READ(12,*)M1,KW,M0,EPOCH1,OSPIN
+             EPOCH1 = EPOCH1-EPOCH0
           ELSE
              M1 = BODY(I)*ZMBAR
              M0 = M1

@@ -16,7 +16,7 @@
 *
 *
 *       Adopt twice the tidal radius as escape condition.
-      RESC2 = 4.0*RTIDE**2
+      RESC2 = 9.0*RTIDE**2
       RTIDE2 = RTIDE**2
       NCORR = 0
       NCRIT1 = 0

@@ -71,7 +71,18 @@
                   FDR(K) = FDR(K) + (FMD(K) - FSD(K))
    30         CONTINUE
           END IF
+*
+*       Check addition of NFW halo potential to regular force.
+          IF (ZDUM(2).GT.0.0D0) THEN
+              CALL FNFW(RG,VG,FS,FSD)
+              CALL FNFW(XG,XGDOT,FM,FMD)
+              DO 35 K = 1,3
+                  FREG(K) = FREG(K) + (FM(K) - FS(K))
+                  FDR(K) = FDR(K) + (FMD(K) - FSD(K))
+   35         CONTINUE
+          END IF
       END IF
+
 *
 *       Include optional Plummer potential in the regular force.
       IF (((KZ(14).EQ.3.AND.MP.GT.0.0D0).OR.KZ(14).EQ.4).

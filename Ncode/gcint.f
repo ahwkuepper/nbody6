@@ -52,9 +52,18 @@
    30     CONTINUE
       END IF
 *
+*       Check addition of NFW halo potential.
+      IF (ZDUM(2).GT.0.0D0) THEN
+          CALL FNFW(RG,VG,FS,FSD)
+          DO 35 K = 1,3
+              FM(K) = FM(K) + FS(K)
+              FD(K) = FD(K) + FSD(K)
+   35     CONTINUE
+      END IF
+*
 *       Set time factors for corrector.
       DT13 = ONE3*DT
-      DTSQ12 = ONE12*DT**2  
+      DTSQ12 = ONE12*DT**2
       TG = TG + DT
 *
 *       Include the Hermite corrector and update F & FDOT.

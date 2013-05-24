@@ -41,6 +41,12 @@
           CALL XTRNL0
       END IF 
 *
+*       set time scales to astrophysical units (Myr)
+      DTADJ = DTADJ/TSCALE
+      DELTAT = DELTAT/TSCALE
+      DTPLOT = DTPLOT/TSCALE
+      TCRIT = TCRIT/TSCALE
+*
 *       Check optional scaling to hot system.
       IF (KZ(29).GT.0) THEN
           CALL HOTSYS

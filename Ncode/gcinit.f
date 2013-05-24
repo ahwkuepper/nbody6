@@ -12,7 +12,7 @@
 * 
 *       Obtain initial force and first derivative from point-mass galaxy.
       IF (GMG.GT.0.0D0) THEN
-          RIN2 = 1.0/(RG(1)**2 + RG(2)**2 + RG(3)**2)
+          RIN2 = 1.0/(RG(1)**2 + RG(2)**2 + RG(3)**2 + ZDUM(1))
           RIN3 = RIN2*SQRT(RIN2)
           RGVG = 3.0*(RG(1)*VG(1) + RG(2)*VG(2) + RG(3)*VG(3))*RIN2
 *     
@@ -52,6 +52,15 @@
                FG(K) = FG(K) + FD(K)
                FGD(K) = FGD(K) + FDD(K)
    20     CONTINUE
+      END IF
+*
+*       Check addition of NFW halo potential.
+      IF (ZDUM(2).GT.0.0D0) THEN
+          CALL FNFW(RG,VG,FD,FDD)
+          DO 30 K = 1,3
+               FG(K) = FG(K) + FD(K)
+               FGD(K) = FGD(K) + FDD(K)
+   30     CONTINUE
       END IF
 *
 *       Initialize the time of GC integration.

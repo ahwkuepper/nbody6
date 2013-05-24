@@ -49,7 +49,7 @@ chain.f archain.f erel.f grbin.f absorb.f chf.f chfind.f chinit.f \
 chlist.f chmod.f chpert.f cpertj.f cpertx.f chterm.f const.f fchain.f ghost.f \
 infall.f inject.f reduce.f reinit.f setsys.f tchain.f xcpred.f xtpert.f \
 chdata.f chpot.f expel2.f hpsort.f inclin.f \
-chfirr.f kcpert.f ksphys.f physks.f pnpert.f xtpert2.f bhstat.f
+chfirr.f kcpert.f ksphys.f physks.f pnpert.f xtpert2.f bhstat.f fnfw.f
 
 OBJECTS = $(SOURCE:.f=.o) gasdev.o ran1.o vdisp.o vdisp2.o
 

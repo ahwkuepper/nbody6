@@ -133,12 +133,18 @@
       ELSE IF (KZ(14).EQ.3) THEN
 *
 *       Read all parameters (NB! Do not confuse with Oort's constants A, B).
-          READ (5,*)  GMG, DISK, A, B, VCIRC, RCIRC, GMB, AR, GAM
+          READ (5,*)  GMG, DISK, A, B, VCIRC, RCIRC, GMB, AR, GAM,
+     &                (ZDUM(K), K=1,4)
+*       Meaning of additional ZDUM parameters:
+*           ZDUM(1) = smoothing length of central point mass
+*           ZDUM(2) = NFW halo scale mass
+*           ZDUM(3) = NFW halo scale radius
+*           ZDUM(4) = halo flattening
 *       Gamma/eta model: GMB = mass, AR = scale radius, GAM = exponent.
           READ (5,*)  (RG(K),K=1,3), (VG(K),K=1,3)
 *
 *       Specify planar motion from SEMI & ECC for no disk & halo if VZ = 0.
-          IF (DISK + VCIRC + GMB.EQ.0.0.AND.VG(3).EQ.0.0D0) THEN
+          IF (DISK+VCIRC+GMB+ZDUM(2).EQ.0.0.AND.VG(3).EQ.0.0D0) THEN
               RAP = RG(1)
               ECC = RG(2)
               SEMI = RAP/(1.0 + ECC)
@@ -165,11 +171,12 @@
           GMG = GMG/ZMTOT
           GMB = GMB/ZMTOT
           AR = 1000.0*AR/RBAR
+          ZDUM(1) = 1000.0*ZDUM(1)/RBAR
 *
           IF (GMG.GT.0.0) THEN
-              WRITE (6,35)  GMG, SQRT(R02), OMEGA, RTIDE, RBAR
+              WRITE (6,35)  GMG,ZDUM(1),SQRT(R02),OMEGA,RTIDE,RBAR
    35         FORMAT (/,12X,'POINT-MASS MODEL:    GMG =',1P,E9.1,
-     &                      '  RG =',E9.1,'  OMEGA =',E9.1,
+     &         '  SMOOTHING =',F6.2,'  RG =',E9.1,'  OMEGA =',E9.1,
      &                      '  RT =',0P,F6.2,'  RBAR =',F6.2)
           END IF
           IF (GMB.GT.0.0D0) THEN
@@ -187,13 +194,23 @@
    40         FORMAT (/,12X,'DISK MODEL:    MD =',1P,E9.1,
      &                                   '  A =',E9.1,'  B =',E9.1)
           END IF
-*
+*       Include NFW halo in N-body units
+          IF (ZDUM(2).GT.0.0D0) THEN
+              ZDUM(2) = ZDUM(2)/ZMTOT
+              ZDUM(3) = 1000.0*ZDUM(3)/RBAR
+              WRITE (6,41)  DISK, A, B
+41            FORMAT (/,12X,'NFW HALO:    MVIR =',1P,E9.1,
+     &                       '  RVIR =',E9.1,' QZ =',F6.2)
+        END IF
+
+
 *       Determine local halo velocity from total circular velocity.
-          IF (VCIRC.GT.0.0D0) THEN
+           IF (VCIRC.GT.0.0D0.AND.ZDUM(2).EQ.0.0) THEN
               VCIRC = VCIRC/VSTAR
               RCIRC = 1000.0*RCIRC/RBAR
+              A1 = SQRT(RCIRC**2 + (ZDUM(1))**2)
               A2 = RCIRC**2 + (A + B)**2
-              V02 = VCIRC**2 - (GMG/RCIRC + DISK*RCIRC**2/A2**1.5)
+              V02 = VCIRC**2 - (GMG/A1 + DISK*RCIRC**2/A2**1.5)
 *       Include any contribution from bulge potential (V2 = R*F).
               IF (GMB.GT.0.0D0) THEN
                   VB2 = GMB/RCIRC*(1.0 + AR/RCIRC)**(GAM-3.0)

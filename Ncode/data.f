@@ -8,6 +8,10 @@
       REAL*8  RAN2
 *
 *
+      character*80 fname,dname,ddir
+      integer ld,ldd,type
+      common /fnm/ ld,ldd,dname,ddir
+*
 *       Initialize the portable random number generator (range: 0 to 1).
       KDUM = -1
       RN1 = RAN2(KDUM)
@@ -39,11 +43,18 @@
 *
 *       Check options for reading initial conditions from input file.
       IF (KZ(22).GE.2.OR.KZ(22).EQ.-1) THEN
+          fname=dname
+          write(fname(ld+1:ld+6),'(a6)') '.NBODY'
+          write(*,'(/a,a)')'Reading input from: ',fname
+          open (unit=10,file=fname,form='formatted')
           ZMASS = 0.0
           DO 5 I = 1,N
               READ (10,*)  BODY(I), (X(K,I),K=1,3), (XDOT(K,I),K=1,3)
               ZMASS = ZMASS + BODY(I)
     5     CONTINUE
+          close(10)
+          go to 40
+*
 *       Include possibility of a new IMF via option #20.
           IF (KZ(22).GT.2.OR.KZ(22).EQ.-1) GO TO 50
       END IF
