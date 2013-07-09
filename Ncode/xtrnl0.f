@@ -176,7 +176,7 @@
           IF (GMG.GT.0.0) THEN
               WRITE (6,35)  GMG,ZDUM(1),SQRT(R02),OMEGA,RTIDE,RBAR
    35         FORMAT (/,12X,'POINT-MASS MODEL:    GMG =',1P,E9.1,
-     &         '  SMOOTHING =',F6.2,'  RG =',E9.1,'  OMEGA =',E9.1,
+     &         '  SMOOTHING =',E9.1,'  RG =',E9.1,'  OMEGA =',E9.1,
      &                      '  RT =',0P,F6.2,'  RBAR =',F6.2)
           END IF
           IF (GMB.GT.0.0D0) THEN
@@ -198,8 +198,8 @@
           IF (ZDUM(2).GT.0.0D0) THEN
               ZDUM(2) = ZDUM(2)/ZMTOT
               ZDUM(3) = 1000.0*ZDUM(3)/RBAR
-              WRITE (6,41)  DISK, A, B
-41            FORMAT (/,12X,'NFW HALO:    MVIR =',1P,E9.1,
+              WRITE (6,41)  ZDUM(2), ZDUM(2), ZDUM(3)
+   41         FORMAT (/,12X,'NFW HALO:    MVIR =',1P,E9.1,
      &                       '  RVIR =',E9.1,' QZ =',F6.2)
         END IF
 
@@ -234,8 +234,8 @@
                   RI2 = RI**2
                   A2 = RI2 + (A + B)**2
                   VB2 = GMB/RI*(1.0 + AR/RI)**(GAM-3.0)
-                  VCIRC2 = GMG/SQRT(RI2) + DISK*RI2/A2**1.5 +
-     &                     V02*RI2/(RL2 + RI2) + VB2
+                  VCIRC2 = GMG/SQRT(RI2 + ZDUM(1)**2) +
+     &                DISK*RI2/A2**1.5 + V02*RI2/(RL2 + RI2) + VB2
                   WRITE (17,50)  SQRT(VCIRC2)*VSTAR, RI*RBAR/1000.0
    50             FORMAT (' CIRCULAR VELOCITY:    VC R ',F7.1,F7.2)
                   RI = RI + DR
@@ -244,8 +244,8 @@
 *
               A2 = R02 + (A + B)**2
               VB2 = GMB/SQRT(R02)*(1.0 + AR/SQRT(R02))**(GAM-3.0)
-              VCIRC2 = GMG/SQRT(R02) + DISK*R02/A2**1.5 +
-     &                 V02*R02/(RL2 + R02) + VB2
+              VCIRC2 = GMG/SQRT(R02 + ZDUM(1)**2) +
+     &            DISK*R02/A2**1.5 + V02*R02/(RL2 + R02) + VB2
               VCIRC = SQRT(VCIRC2)*VSTAR
               WRITE (6,62)  VCIRC, SQRT(R02)/1000.0, SQRT(RL2)/1000.0
    62         FORMAT (/,12X,'CIRCULAR VELOCITY:    VC RG RL',F7.1,2F7.2)
@@ -257,7 +257,7 @@
           CALL GCINIT
 *
 *       Form tidal radius from circular angular velocity (assumes apocentre).
-          IF (RTIDE.EQ.0.0D0) RTIDE = (0.5/OMEGA**2)**0.3333
+          IF (RTIDE.EQ.0.0D0) RTIDE = (0.3333/OMEGA**2)**0.3333
 *
           WRITE (6,65)  (RG(K),K=1,3), (VG(K),K=1,3), SQRT(V02)
    65     FORMAT (/,12X,'SCALED ORBIT:    RG = ',3F7.2,

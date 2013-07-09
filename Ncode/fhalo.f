@@ -11,10 +11,12 @@
 *
 *
 *       Obtain force and first derivative for logarithmic potential.
-      R2 = XI(1)**2 + XI(2)**2 + XI(3)**2 + RL2
+      R2 = XI(1)**2 + XI(2)**2 + (XI(3)/ZDUM(4))**2 + RL2
       RRD = 2.0*(XI(1)*XIDOT(1) + XI(2)*XIDOT(2) + XI(3)*XIDOT(3))/R2
       H2 = V02/R2
-*
+
+*       WO MUSS HIER NOCH UEBERALL ZDUM(4) HIN??
+
 *       Note softening in the logarithmic potential (cf. Binney & Tremaine).
       DO 10 K = 1,3
           FM(K) = -H2*XI(K)

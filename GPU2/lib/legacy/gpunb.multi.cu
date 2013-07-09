@@ -10,14 +10,14 @@
 
 #define NTHREAD 64 // 64, 96, 128 or 192
 // #define NJBLOCK 16 // 8800GTS/512 has 16
-#define NJBLOCK 14 // for GTX 470
+#define NJBLOCK 30 // for GTX 470
 #define NIBLOCK 16 // 16 or 32 
 #define NIMAX (NTHREAD * NIBLOCK) // 1024
 
 #define NBMAX 64 // NNB per block, must be power of 2
 
-#define MAX_CPU 8
-#define MAX_GPU 4
+#define MAX_CPU 32
+#define MAX_GPU 8
 
 template <class T>
 struct myvector{

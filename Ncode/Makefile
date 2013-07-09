@@ -1,6 +1,10 @@
 .KEEP_STATE:
 #suggested by Keigo Nitadori 11/06/08.
+
 FFLAGS = -O3 -Wall -ffast-math
+#For Brisbane:
+#FFLAGS = -O3 -Wall -ffast-math -march=nocona
+
 #FFLAGS += -O3 -fbounds-check
 #FFLAGS = -O3 -pg
 CFLAGS = -O3

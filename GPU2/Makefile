@@ -1,6 +1,6 @@
-avx       = enable
+avx       = disable
 chainmode = archain
-ksblock   = on
+ksblock   = off
 
 ifeq ($(avx), enable)
 MKOPTIONS += avx=enable
@@ -30,6 +30,12 @@ FC       = gfortran
 FFLAGS   = -O3 -Wall -march=core2 -fopenmp
 CXX      = g++ 
 CXXFLAGS = -O3 -Wall -march=core2
+#For Brisbane:
+#FC    	  = gfortran
+#FFLAGS   = -O3 -Wall -fopenmp -march=nocona
+#CXX   	  = /usr/bin/gcc
+#CXXFLAGS = -m64 -O3 -Wall -march=nocona
+
 ifeq ($(avx), enable)
 FFLAGS   += -mavx
 CXXFLAGS += -mavx
@@ -37,10 +43,19 @@ endif
 
 CUDA_PATH = /usr/local/cuda
 #SDK_PATH  = /usr/local/cuda_sdk
+
 SDK_PATH  = /usr/local/cuda/samples
+#For Brisbane:
+#SDK_PATH=/home/uqhbaumg/NVIDIA_GPU_Computing_SDK/C
+
 
 NVCC = $(CUDA_PATH)/bin/nvcc
+
 NVCC += -arch=sm_30 -Xptxas -v
+#For Brisbane:
+#NVCC += -arch=sm_13 -Xptxas -dlcm=cg
+
+
 NVCC += -I $(SDK_PATH)/common/inc
 ifeq ($(avx), enable)
 NVCC += -Xcompiler "-O3 -Wall -fopenmp -mavx"
@@ -50,6 +65,8 @@ endif
 NVCC += -DWITH_CUDA5
 
 RUNDIR = ./run
+#For Brisbane:
+#RUNDIR = ../models
 
 ifeq ($(avx), enable)
 all: gpu avx

@@ -8,7 +8,7 @@
 #include "cuda_pointer.h"
 
 #define NTHREAD 64 // 64, 96, 128 or 192
-#define NJBLOCK 16 // 8800GTS/512 has 16
+#define NJBLOCK 30 // 8800GTS/512 has 16
 #define NIBLOCK 16 // 16 or 32 
 #define NIMAX (NTHREAD * NIBLOCK) // 1024
 
@@ -263,7 +263,7 @@ static cudaPointer <Jparticle> jpbuf;
 static cudaPointer <Iparticle> ipbuf;
 static cudaPointer <Force[NJBLOCK]> fobuf;
 #endif
-#define MAX_CPU 8
+#define MAX_CPU 32
 static myvector<int> nblist[MAX_CPU];
 static int nbody, nbodymax;
 // static int *nblist;

@@ -3,20 +3,33 @@ FFLAGS = -Wall -O3 -fopenmp -ffast-math
 #FFLAGS +=  -fbounds-check
 #FFLAGS +=  -traceback
 #FFLAGS +=  -pg
+
 ifeq ($(avx), enable)
 FFLAGS += -march=core2 -mavx
 else
 FFLAGS += -march=core2
 endif
+#For Brisbane:
+#ifeq ($(avx), enable)
+#FFLAGS += -march=nocona -mavx
+#else
+#FFLAGS += -march=nocona
+#endif
 
 LIBCUDA = -L /usr/local/cuda/lib64 -lcudart
 
 LD_GPU = gfortran -lstdc++ -fopenmp $(LIBCUDA)
 LD_GPU += -fPIC
+
 LD_GPU += -B /usr/share/libhugetlbfs -Wl,--hugetlbfs-align
+#For Bribane:
+##LD_GPU += -B /usr/share/libhugetlbfs -Wl,--hugetlbfs-align
 
 LD_SSE = gfortran -lstdc++ -fopenmp
+
 LD_SSE += -B /usr/share/libhugetlbfs -Wl,--hugetlbfs-align
+#For Brisbane:
+##LD_SSE += -B /usr/share/libhugetlbfs -Wl,--hugetlbfs-align
 
 #default value of chainmode is chain
 chainmode ?= chain

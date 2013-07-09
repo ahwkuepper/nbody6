@@ -12,7 +12,7 @@
 * 
 *       Obtain initial force and first derivative from point-mass galaxy.
       IF (GMG.GT.0.0D0) THEN
-          RIN2 = 1.0/(RG(1)**2 + RG(2)**2 + RG(3)**2 + ZDUM(1))
+          RIN2 = 1.0/(RG(1)**2 + RG(2)**2 + RG(3)**2 + ZDUM(1)**2)
           RIN3 = RIN2*SQRT(RIN2)
           RGVG = 3.0*(RG(1)*VG(1) + RG(2)*VG(2) + RG(3)*VG(3))*RIN2
 *     
