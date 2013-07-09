@@ -145,8 +145,8 @@
           IF (RX.GT.10.0*RMIN.OR.HI.GT.0.0) GO TO 10
           IF (GPERT.LT.0.1) GO TO 10
       END IF
-*       Quit on RIJ > 5*RMIN to prevent repeated switching.
-      IF (NCH.EQ.2.AND.(RIJ.GT.5.0*RMIN.OR.GPERT.LT.1.0D-04)) GO TO 10
+*       Quit on RIJ > 5*RMIN (or NCH = 2 & RDOT > 0) to prevent switching.
+      IF (NCH.EQ.2.AND.(RIJ.GT.5.0*RMIN.OR.RDOT.GT.0.0)) GO TO 10
       IF (NN.GE.7.AND.JCLOSE.GT.N) GO TO 10
 *
 *       Note looping for NCH = 2 which gives GAMX = 0.

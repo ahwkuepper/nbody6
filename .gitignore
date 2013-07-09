@@ -2,3 +2,6 @@
 *~
 .DS_Store
 #*
+nbody6
+nbody6_gpu
+nbody6_sse

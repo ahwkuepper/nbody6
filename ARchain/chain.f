@@ -476,7 +476,7 @@ c     Ixc=1 ! 1 for exact time, 0 for not exact time
 *       Evaluate perturbation at mean separation.
                   GA = 2.0*M(IX)/MB*(SEMI/RCJ)**3
                   CALL EMAX1(MB,XX,VV,XCM,VCM,ECC2,EX,EM)
-                  IF (NST.EQ.0) THEN
+                  IF (NST.EQ.0.AND.MOD(NSTEP1,100).EQ.0) THEN
                       PM = AOUT*(1.0 - E1)
                       WRITE (97,220) TNOW, IPN, NAMEC(IX), ALPH, EX, EM,
      &                               PM, RPC, TKOZ, GA
@@ -485,17 +485,18 @@ c     Ixc=1 ! 1 for exact time, 0 for not exact time
                       CALL FLUSH(97)
 *       Check long-lived inclined triples for switching off PN using JGR > 0.
                       IF (IPN.EQ.1.AND.TZ.GT.20.0.AND.ALPH.GT.130.0.AND.
-     &                    PM.GT.20.0*SEMI) THEN
+     &                    PM.GT.20.0*SEMI.AND.RRD.GT.0.0) THEN
                           JGR = 1
                           WRITE (6,222)  NSTEP1, ECC, ALPH, PM/SEMI, TZ
   222                     FORMAT (' PN SWITCH-OFF    # E IN PM/A TZ ',
      &                                          I10,F8.4,F7.1,1P,2E9.1)
-                      END IF
-                      IF (IPN.EQ.1.AND.GA.LT.1.0D-05) THEN
-                          WRITE (6,224)  NSTEP1, ECC, ALPH, PM/SEMI, TZ
-  224                     FORMAT (' PN SWITCH-OFF    # E IN PM/A TZ ',
-     &                                          I10,F8.4,F7.1,1P,2E9.1)
 *       Terminate chain by existing procedure.
+                          GO TO 250
+                      END IF
+*       Include termination for weakly perturbed eccentric binary.
+                      IF (IPN.EQ.1.AND.ECC.GT.0.99.AND.GA.LT.1.D-08.AND.
+     &                    TZ.GT.10.0.AND.RRD.GT.0.0) THEN
+                          WRITE (6,222)  NSTEP1, ECC, ALPH, PM/SEMI, TZ
                           GO TO 250
                       END IF
                   ELSE IF (AOUT*(1.0-E1).LT.RPC) THEN

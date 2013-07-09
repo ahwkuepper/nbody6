@@ -35,10 +35,10 @@
 *
 *       Open the GPU libraries on each new run (note nnbmax = NN is printed).
       IF (ISTART.EQ.0) THEN
-          NN = NTOT + 10
+          NN = NTOT + 100
           CALL GPUNB_OPEN(NN)
 *       Set larger value for GPUIRR (note further possible increase of NTOT).
-          NNN = NTOT + 10
+          NNN = NTOT + 100
 *       Increase NNN further for cold start to deal with many KS.
           IF (QVIR.LT.0.01.AND.TIME.EQ.0.0D0) NNN = NTOT + 500
 *       Allow for missing primordial binaries.
@@ -395,12 +395,12 @@
 *
       ELSE
 *       Perform irregular correction in parallel (suppressed currently).
-*!$omp parallel do private(II, I)
+!$omp parallel do private(II, I)
       DO 50 II = 1,NXTLEN
           I = NXTLST(II)
           CALL NBINTP(I,IRR(II),GF(1,II),GFD(1,II))
    50 CONTINUE
-*!$omp end parallel do
+!$omp end parallel do
       END IF
       NSTEPI = NSTEPI + NXTLEN
 *
@@ -487,7 +487,7 @@
 *       Evaluate current irregular forces by vector procedure.
           CALL GPUIRR_FIRR_VEC(NI,IREG(II),GF(1,1),GFD(1,1))
 *       NB! Note suppression of parallel procedure here and for nbintp.f.
-*!$omp parallel do private(I, LX)
+!$omp parallel do private(I, LX)
           DO 57 LL = 1,NI
               I = IREG(JNEXT+LL)
 *       Send new irregular force and perform correction.
@@ -502,7 +502,7 @@
 *       Note possible errors in the potential when using predicted values.
 *             POT = POT + BODY(I)*GPUPHI(LL)
    57     CONTINUE
-*!$omp end parallel do
+!$omp end parallel do
           JNEXT = JNEXT + NI
    55 CONTINUE
 *
