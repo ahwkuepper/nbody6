@@ -73,11 +73,11 @@ gpuirr_set_list_:
 	.cfi_def_cfa_offset 32
 	movl	(%rsi), %eax
 	movl	(%rdi), %r10d
-	cmpl	$520, %eax
+	cmpl	$600, %eax
 	jg	.L23
 	decl	%r10d
 	movslq	%r10d, %r10
-	imulq	$2096, %r10, %r10
+	imulq	$2416, %r10, %r10
 	addq	_ZL4list(%rip), %r10
 	testl	%eax, %eax
 	movl	%eax, 12(%r10)
@@ -463,7 +463,7 @@ gpuirr_open_:
 	movl	(%rdi), %ebx
 	cmpb	$0, _ZL7is_open(%rip)
 	jne	.L45
-	cmpl	$521, %ebp
+	cmpl	$601, %ebp
 	jg	.L46
 	movq	stderr(%rip), %rcx
 	movl	$30, %edx
@@ -508,7 +508,7 @@ gpuirr_open_:
 	salq	$5, %rax
 	vxorpd	%xmm0, %xmm0, %xmm0
 	leaq	(%rdx,%rax), %rax
-	imulq	$2096, %rbp, %rbp
+	imulq	$2416, %rbp, %rbp
 	vmovapd	%xmm0, 80(%rax)
 	movq	%rbp, %rdx
 	vxorps	%xmm0, %xmm0, %xmm0
@@ -609,7 +609,7 @@ _ZL11gpuirr_firriPdS_:
 	andq	$-32, %rsp
 	salq	$5, %rcx
 	pushq	%rbx
-	imulq	$2096, %rdi, %rbx
+	imulq	$2416, %rdi, %rbx
 	.cfi_escape 0x10,0x3,0x7,0x76,0x0,0x9,0xe0,0x1a,0x38,0x1c
 	subq	$480, %rsp
 	vmovapd	_ZL8vec_tnow(%rip), %xmm0
@@ -1097,7 +1097,7 @@ _ZL15gpuirr_firr_veciPKiPA3_dS2_.omp_fn.0:
 	movl	(%rsp), %eax
 	decq	%rsi
 	incl	%eax
-	imulq	$2096, %rsi, %rsi
+	imulq	$2416, %rsi, %rsi
 	addq	$4, %r14
 	addl	12(%rsi,%rdx), %r13d
 	cmpl	%eax, 12(%rsp)

@@ -265,8 +265,9 @@
 *      44  Plotting file for main cluster parameters on fort.56 (OUTPUT).
 *      45  Plotting file for BH (NAME = 1 or 2) on unit 45 (routine BHPLOT);
 *                      primordial BH defined by INSTAR; membership = KZ(24).
-*      46  Free
-*      47  Post-Newtonian KS treatment (in development).
+*      46  Reserved for NBODY6+.
+*      47  Reserved for NBODY6+.
+*      48  GPU initialization of neighbour lists and forces.
 *       ---------------------------------------------------------------------
 *
 * NBODY6: Restart from fort.1

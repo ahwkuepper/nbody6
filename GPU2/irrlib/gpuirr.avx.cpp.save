@@ -314,7 +314,7 @@ struct Force{
 };
 
 struct NBlist{
-	enum{ NB_MAX = 512 + 88 };
+	enum{ NB_MAX = 512 + 8 };
 	int pad[3];
 	int nnb;
 	int nb[NB_MAX];

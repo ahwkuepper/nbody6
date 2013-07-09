@@ -160,7 +160,7 @@
           WRITE (9,45)  EB(JPAIR), ECC(JPAIR), ECM(JPAIR), RCM(JPAIR),
      &                  BODY(J1)*ZMBAR, BODY(J2)*ZMBAR, PB(JPAIR),
      &                  NAME(J1), NAME(J2), KSTAR(J1), KSTAR(J2), KCM
-   45     FORMAT (F8.5,F7.3,F7.2,F6.2,2F5.1,F8.1,2I6,3I4)
+   45     FORMAT (F8.5,F7.3,F7.2,F6.2,2F5.1,F8.1,2I7,3I4)
    50 CONTINUE
       CALL FLUSH(9)
 *

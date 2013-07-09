@@ -49,6 +49,15 @@
 *       Re-initialize chain WD/BH system after dormant KS (#11 only).
           IF (KZ(11).NE.0.AND.NCH.EQ.0.AND.LIST(1,I1).GT.0) THEN
               IF (MIN(KSTAR(I1),KSTAR(I2)).GE.13) THEN
+                  RIJ2 = 0.0
+                  RD = 0.0
+                  DO 220 K = 1,3
+                      RIJ2 = RIJ2 + (X(K,I) - X(K,JCLOSE))**2
+                      RD = RD + (X(K,I) - X(K,JCLOSE))*
+     &                          (XDOT(K,I) - XDOT(K,JCLOSE))
+  220             CONTINUE
+*       Restrict the separation to 10*RMIN and negative velocity.
+                  IF (RIJ2.GT.100.0*RMIN2.AND.RD.GT.0.0) GO TO 100
                   SEMI = -0.5*BODY(I)/H(IPAIR)
                   WRITE (6,222)  TIME+TOFF, NAME(JCLOSE), KSTAR(I1),
      &                           KSTAR(I2), LIST(1,I1), GAMMA(IPAIR),
