@@ -62,7 +62,7 @@
 *
           write(*,*)'Writing output to: ',
      *          dname(1:ld)//'.POS'
-          OPEN (UNIT=30,file=ddir(1:ldd)//dname(1:ld)//'.POS',
+          OPEN (UNIT=3,file=ddir(1:ldd)//dname(1:ld)//'.POS',
      *       FORM='UNFORMATTED',status='NEW')
 *
 *       Read input parameters, perform initial setup and obtain output.
@@ -74,7 +74,7 @@
           fname = dname
           write(fname(ld+1:ld+5),'(a5)') '.POS2'
           write(*,*)'Writing output to: ',fname
-          OPEN (UNIT=30,file=ddir(1:ldd)//dname(1:ld)//'.POS2',
+          OPEN (UNIT=3,file=ddir(1:ldd)//dname(1:ld)//'.POS2',
      *       FORM='UNFORMATTED',status='NEW')
 *
 *       Read previously saved COMMON variables from tape/disc on unit 1.

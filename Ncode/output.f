@@ -475,12 +475,12 @@
 *
 *       Split into WRITE (3) NTOT & WRITE (3) ..  if disc instead of tape.
       NK = 40
-      WRITE (3)  NTOT, MODEL, NRUN, NK
+      WRITE (3)  NTOT, NK, N
       WRITE (3)  (AS(K),K=1,NK), (BODYS(J),J=1,NTOT),
      &           ((XS(K,J),K=1,3),J=1,NTOT), ((VS(K,J),K=1,3),J=1,NTOT),
      &           (RADII(J),J=1,NTOT),(NAME(J),J=1,NTOT),
      &           (KSTAR(J),J=1,NTOT),(LUMINOSITIES(J),J=1,NTOT)
-*     CLOSE (UNIT=3)
+      CALL FLUSH(3)
 *
 *       Produce output file for tidal tail members.
    99 IF (KZ(3).LE.3.AND.NTAIL.GT.0) THEN
