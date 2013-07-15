@@ -46,7 +46,7 @@
       END IF
 *
 *       Check addition of logarithmic galaxy potential (not linearized).
-      IF (V02.GT.0.0D0) THEN
+      IF (V02.GT.0.0D0.AND.ZDUM(2).EQ.0.0D0) THEN
           CALL FHALO(RG,VG,FD,FDD)
           DO 20 K = 1,3
                FG(K) = FG(K) + FD(K)

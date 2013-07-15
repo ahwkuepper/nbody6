@@ -62,7 +62,8 @@
 *
 *       Include galaxy point mass term for body #I in differential form.
           IF (GMG.GT.0.0D0) THEN
-              ET = ET + GMG*(1.0/SQRT(RI2) - 1.0/SQRT(RG2))
+              ET = ET + GMG*(1.0/SQRT(RI2+ZDUM(1)**2)
+     &                - 1.0/SQRT(RG2+ZDUM(1)**2))
           END IF
 *
 *       Check contribution from gamma/eta bulge potential.
@@ -89,10 +90,29 @@
               ET = ET + DISK*(1.0/AZ - 1.0/AZ0)
           END IF
 *
+*       Get radius for flattened halo potential.
+          RGHALO2 = 0.0
+          RIHALO2 = 0.0
+          DO 25 K = 1,2
+               RGHALO2 = RGHALO2 + RG(K)**2
+               RIHALO2 = RIHALO2 + (RG(K) + XI(K))**2
+   25     CONTINUE
+          RGHALO2 = RGHALO2 + (RG(3)/ZDUM(4))**2
+          RIHALO2 = RIHALO2 + ((RG(3) + XI(3))/ZDUM(4))**2
+
 *       Check addition of differential logarithmic potential.
-          IF (V02.GT.0.0D0) THEN
-              ET = ET + 0.5*V02*(LOG(RI2) - LOG(RG2))
+          IF (V02.GT.0.0D0.AND.ZDUM(2).EQ.0.0D0) THEN
+              ET = ET + 0.5*V02*(LOG(RIHALO2)-LOG(RGHALO2))
           END IF
+
+*       Check addition of differential NFW potential.
+          IF (ZDUM(2).GT.0.0D0) THEN
+              RGHALO = SQRT(RGHALO2)
+              RIHALO = SQRT(RIHALO2)
+              ET = ET + ZDUM(2)*(LOG(1.0D0+RIHALO/ZDUM(3))/RIHALO
+     &               - LOG(1.0D0+RGHALO/ZDUM(3))/RGHALO)
+          END IF
+
 *       Form the differential potential energy due to tides.
           ET = BODY(I)*ET
       END IF

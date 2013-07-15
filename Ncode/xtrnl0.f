@@ -134,7 +134,7 @@
 *
 *       Read all parameters (NB! Do not confuse with Oort's constants A, B).
           READ (5,*)  GMG, DISK, A, B, VCIRC, RCIRC, GMB, AR, GAM,
-     &                (ZDUM(K), K=1,4)
+     &                ZDUM(1), ZDUM(2), ZDUM(3), ZDUM(4)
 *       Meaning of additional ZDUM parameters:
 *           ZDUM(1) = smoothing length of central point mass
 *           ZDUM(2) = NFW halo scale mass
@@ -198,14 +198,14 @@
           IF (ZDUM(2).GT.0.0D0) THEN
               ZDUM(2) = ZDUM(2)/ZMTOT
               ZDUM(3) = 1000.0*ZDUM(3)/RBAR
-              WRITE (6,41)  ZDUM(2), ZDUM(2), ZDUM(3)
-   41         FORMAT (/,12X,'NFW HALO:    MVIR =',1P,E9.1,
-     &                       '  RVIR =',E9.1,' QZ =',F6.2)
+              WRITE (6,41)  ZDUM(2), ZDUM(3), ZDUM(4)
+   41         FORMAT (/,12X,'NFW HALO:    MNFW =',E9.1,
+     &                       '  RNFW =',E9.1,' QZ =',F7.2)
         END IF
 
 
 *       Determine local halo velocity from total circular velocity.
-           IF (VCIRC.GT.0.0D0.AND.ZDUM(2).EQ.0.0) THEN
+           IF (VCIRC.GT.0.0D0.AND.ZDUM(2).EQ.0.0D0) THEN
               VCIRC = VCIRC/VSTAR
               RCIRC = 1000.0*RCIRC/RBAR
               A1 = SQRT(RCIRC**2 + (ZDUM(1))**2)
@@ -247,10 +247,13 @@
               VCIRC2 = GMG/SQRT(R02 + ZDUM(1)**2) +
      &            DISK*R02/A2**1.5 + V02*R02/(RL2 + R02) + VB2
               VCIRC = SQRT(VCIRC2)*VSTAR
-              WRITE (6,62)  VCIRC, SQRT(R02)/1000.0, SQRT(RL2)/1000.0
-   62         FORMAT (/,12X,'CIRCULAR VELOCITY:    VC RG RL',F7.1,2F7.2)
+              WRITE (6,62)  VCIRC, SQRT(R02)/1000.0,
+     &                      SQRT(RL2)/1000.0, ZDUM(4)
+   62         FORMAT (/,12X,'CIRCULAR VELOCITY:    VC RG RL QZ',F7.1,
+     &                2F7.2, F7.2)
           ELSE
               V02 = 0.0
+              RL2 = 1.0
           END IF
 *
 *       Initialize F & FDOT of reference frame (point-mass galaxy is OK).

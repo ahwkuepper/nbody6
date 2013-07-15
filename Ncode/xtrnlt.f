@@ -40,12 +40,21 @@
           END IF
 *
 *       Check addition of logarithmic halo potential to regular force.
-          IF (V02.GT.0.0D0) THEN
+          IF (V02.GT.0.0D0.AND.ZDUM(2).EQ.0.0D0) THEN
               CALL FHALO(XI,XIDOT,FM,FMD)
               DO 30 K = 1,3
                   FREG(K) = FREG(K) + FM(K)
                   FDR(K) = FDR(K) + FMD(K)
    30         CONTINUE
+          END IF
+*
+*       Check addition of NFW halo potential to regular force.
+          IF (ZDUM(2).GT.0.0D0) THEN
+              CALL FNFW(XI,XIDOT,FM,FMD)
+              DO 35 K = 1,3
+                  FREG(K) = FREG(K) + FM(K)
+                  FDR(K) = FDR(K) + FMD(K)
+35            CONTINUE
           END IF
       END IF
 *

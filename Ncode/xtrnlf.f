@@ -63,7 +63,7 @@
           END IF
 *
 *       Check addition of logarithmic halo potential to regular force.
-          IF (V02.GT.0.0D0) THEN
+          IF (V02.GT.0.0D0.AND.ZDUM(2).EQ.0.0D0) THEN
               CALL FHALO(RG,VG,FS,FSD)
               CALL FHALO(XG,XGDOT,FM,FMD)
               DO 30 K = 1,3
