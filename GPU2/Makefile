@@ -1,5 +1,5 @@
 avx       = disable
-chainmode = archain
+chainmode = chain
 ksblock   = off
 
 ifeq ($(avx), enable)
@@ -62,7 +62,7 @@ NVCC += -Xcompiler "-O3 -Wall -fopenmp -mavx"
 else
 NVCC += -Xcompiler "-O3 -Wall -fopenmp"
 endif
-NVCC += -DWITH_CUDA5
+#NVCC += -DWITH_CUDA5
 
 RUNDIR = ./run
 #For Brisbane:

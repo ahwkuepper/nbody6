@@ -12,11 +12,11 @@
 #define NIBLOCK 32 // 16 or 32 
 #define NIMAX (NTHREAD * NIBLOCK) // 2048
 
-#define NXREDUCE 16 // must be >NJBLOCK
+#define NXREDUCE 32 // must be >NJBLOCK
 #define NYREDUCE  8
 
 #define NNB_PER_BLOCK 256 // NNB per block, must be power of 2
-#define NB_BUF_SIZE (1<<18)
+#define NB_BUF_SIZE (1<<20)
 // #define NNB_MAX       384 // total NNB at reduced
 
 #define MAX_CPU 32
