@@ -1,4 +1,4 @@
-avx       = disable
+avx       = disabled
 chainmode = chain
 ksblock   = off
 
@@ -29,7 +29,7 @@ endif
 FC       = gfortran
 FFLAGS   = -O3 -Wall -march=core2 -fopenmp
 CXX      = g++ 
-CXXFLAGS = -O3 -Wall -march=core2
+CXXFLAGS = -O3 -Wall -march=core2 
 #For Brisbane:
 #FC    	  = gfortran
 #FFLAGS   = -O3 -Wall -fopenmp -march=nocona
@@ -81,14 +81,14 @@ gpu: gpunb.gpu.o gpupot.gpu.o intgrt.o gpucor.o nbintp.o cnbint.o nbint.o start.
 	make gpu -C ./Build -f $(shell pwd)/Makefile.build -j4 $(MKOPTIONS)
 	mv -f ./Build/nbody6 $(RUNDIR)/$(BINNAME).gpu
 
-avx: gpunb.avx.o gpupot.avx.o intgrt.o gpucor.o nbintp.o cnbint.o nbint.o start.o fpoly2a.o adjust.o energy2.o phicor.o cmfirr.o cmfirr2.o checkl2.o kspert.o swap.o scale.o wtime.o cxvpred.o gpuirr.o jpred.o jpred2.o fpcorr2.o repair.o sweep2.o ksres3.o check3.o bhplot.o
+avx: gpunb.avx.o gpupot.avx.o intgrt.o gpucor.o nbintp.o cnbint.o nbint.o start.o fpoly2a.o adjust.o energy2.o phicor.o cmfirr.o cmfirr2.o checkl2.o kspert.o swap.o scale.o wtime.o cxvpred.o gpuirr.o jpred.o jpred2.o fpcorr2.o repair.o sweep2.o ksres3.o check3.o bhplot.o fpoly0.o
 	cp -f gpunb.avx.o gpunb.o
 	cp -f gpupot.avx.o gpupot.o
 	cp -f *.o ./Build
 	make sse -C ./Build -f $(shell pwd)/Makefile.build -j4 $(MKOPTIONS)
 	mv -f ./Build/nbody6 $(RUNDIR)/$(BINNAME).avx
 
-sse: gpunb.sse.o gpupot.sse.o intgrt.o gpucor.o nbintp.o cnbint.o nbint.o start.o fpoly2a.o adjust.o energy2.o phicor.o cmfirr.o cmfirr2.o checkl2.o kspert.o swap.o scale.o wtime.o cxvpred.o gpuirr.o jpred.o jpred2.o fpcorr2.o repair.o sweep2.o ksres3.o check3.o bhplot.o
+sse: gpunb.sse.o gpupot.sse.o intgrt.o gpucor.o nbintp.o cnbint.o nbint.o start.o fpoly2a.o adjust.o energy2.o phicor.o cmfirr.o cmfirr2.o checkl2.o kspert.o swap.o scale.o wtime.o cxvpred.o gpuirr.o jpred.o jpred2.o fpcorr2.o repair.o sweep2.o ksres3.o check3.o bhplot.o fpoly0.o
 	cp -f gpunb.sse.o gpunb.o
 	cp -f gpupot.sse.o gpupot.o
 	cp -f *.o ./Build
