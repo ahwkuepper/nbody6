@@ -81,6 +81,11 @@
           TTMP = STEP(I)
       END IF
 *
+*       Do not permit current TIME to be exceeded.
+      IF (T0(I) + TTMP.GT.TIME) THEN
+          TTMP = TIME - T0(I)
+      END IF
+*
 *       Set new block step and update next time.
       STEP(I) = TTMP
       TNEW(I) = STEP(I) + T0(I)

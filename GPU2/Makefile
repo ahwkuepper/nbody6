@@ -1,5 +1,5 @@
-avx       = disabled
-chainmode = chain
+avx       = enable
+chainmode = archain
 ksblock   = off
 
 ifeq ($(avx), enable)
@@ -27,7 +27,7 @@ else
 endif
 
 FC       = gfortran
-FFLAGS   = -O3 -Wall -march=core2 -fopenmp
+FFLAGS   = -O3 -Wall -march=core2
 CXX      = g++ 
 CXXFLAGS = -O3 -Wall -march=core2 
 #For Brisbane:
@@ -54,6 +54,7 @@ NVCC = $(CUDA_PATH)/bin/nvcc
 NVCC += -arch=sm_30 -Xptxas -v
 #For Brisbane:
 #NVCC += -arch=sm_13 -Xptxas -dlcm=cg
+
 
 
 NVCC += -I $(SDK_PATH)/common/inc
@@ -120,13 +121,13 @@ gpuirr.o: ./irrlib/gpuirr.sse.cpp
 
 endif
 intgrt.o: intgrt.omp.f
-	$(FC) $(FFLAGS) $^ -c -o $@ 
+	$(FC) $(FFLAGS) -fopenmp $^ -c -o $@ 
 
 intgrt.s: intgrt.omp.f
-	$(FC) $(FFLAGS) $^ -S -o $@
+	$(FC) $(FFLAGS) -fopenmp $^ -S -o $@
 
 start.o: start.omp.F
-	$(FC) $(FFLAGS) $^ -c -o $@
+	$(FC) $(FFLAGS) -fopenmp $^ -c -o $@
 
 gpunb.gpu.o: lib/gpunb.velocity.cu
 	$(NVCC) $^ -c -o $@

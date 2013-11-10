@@ -263,10 +263,11 @@
       IF (I.GT.N.AND.NNB.LT.NBMAX.AND.RI2.LT.RH2) THEN
 *       Set perturber range (soft binaries & H > 0 have short duration).
           A2 = 100.0*BODY(I)/ABS(H(I-N))
-*       Stabilize NNB on NBMAX if too few perturbers.
-          IF (A2.GT.RS(I)) THEN
+*       Stabilize NNB on NBMAX if 80 % perturber fraction exceeded.
+          J1 = 2*(I - N) - 1
+          IF (A2.GT.RS(I).AND.LIST(1,J1).GT.0.8*NNB) THEN
               A3 = MAX(1.0 - FLOAT(NNB)/FLOAT(NBMAX),0.0D0)
-*       Modify volume ratio by approximate square root factor.
+*       Increase volume ratio by approximate square root factor.
               A4 = 1.0 + 0.5*A3
           END IF
       END IF
@@ -656,6 +657,13 @@
           NICONV = NICONV + 1
           GO TO 110
       END IF
+*
+*       Reduce irregular step on switching from zero neighbour number.
+      IF (NNB0.EQ.0.AND.NNB.GT.0) THEN
+          STEP(I) = 0.25*STEP(I)
+          TNEW(I) = T0(I) + STEP(I)
+      END IF
+*
 *     NSTEPR = NSTEPR + 1
 *
       RETURN

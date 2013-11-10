@@ -1,4 +1,4 @@
-      SUBROUTINE BRAKE4(I1,I2,KCASE,DT)
+      SUBROUTINE BRAKE4(I1,I2,DT)
 *
 *
 *       GR analytical orbit shrinkage.
@@ -14,6 +14,12 @@
 *
 *       Check relativistic conditions (at least one >= NS).
       IF (MAX(KSTAR(I1),KSTAR(I2)).LT.13) GO TO 100
+*
+*       See whether CLIGHT has been initialized in ARchain.
+      IF (ITER.EQ.0) THEN
+          READ (5,*)  CLIGHT
+          ITER = 1
+      END IF
 *
 *       Specify the basic elements from BH or KS treatments.
       M1 = BODY(I1)
@@ -103,7 +109,7 @@
 *
 *       Check KS termination with added perturber to activate PN.
       IF (TGR.LT.0.5) THEN
-*       Note thst first order Peters formulation is not valid for strong GR.
+*       Note that first order Peters formulation is not valid for strong GR.
           JP = LIST(2,I)
           LIST(1,I1) = 1
           LIST(2,I1) = JP

@@ -225,7 +225,7 @@
 *       NB!!! This looks risky - hence suppress!!
 *
       IF (KZ(30).GT.2) THEN
-          WRITE (3,1)  TIME0+TOFF, TIME+TOFF
+          WRITE (6,1)  TIME0+TOFF, TIME+TOFF
     1     FORMAT (' REDUCE:   TIME0 TIME ',2F10.6)
       END IF
 *
@@ -321,7 +321,7 @@
       DO 40 J = IFIRST,NTOT
           IF (NAME(J).EQ.NAMEC(IESC)) THEN
               I = J
-              IF (BODY(J).GT.0.0D0) WRITE (3,35)  I, IESC, NAMEC(IESC)
+              IF (BODY(J).GT.0.0D0) WRITE (6,35)  I, IESC, NAMEC(IESC)
    35         FORMAT (' WARNING!   NON-ZERO GHOST    I IESC NAMEC ',3I5)
               GO TO 55
           END IF
@@ -344,7 +344,7 @@
    45 CONTINUE
 *
 *       Include warning if no reference body (this should not occur).
-      WRITE (3,48)  IESC, NAMEC(NEW)
+      WRITE (6,48)  IESC, NAMEC(NEW)
    48 FORMAT (' REDUCE:   DANGER!   NO REFERENCE BODY    IESC NAME',2I5)
       NCH = NCH + 1
       NN = NCH
@@ -356,7 +356,7 @@
 *     CALL NBREST(I,1,NNB)
 *
       IF (KZ(30).GT.1) THEN
-          WRITE (3,53)  NAME0, NAME(ICH), ICH
+          WRITE (6,53)  NAME0, NAME(ICH), ICH
    53     FORMAT (' REDUCE:    SWITCH C.M.    NAME0 NAMECH ICH ',3I7)
       END IF
 *
@@ -657,7 +657,7 @@
 *  96 CONTINUE
 *
 *     IF (KZ(30).GT.2) THEN
-*         WRITE (3,97)  TIME+TOFF, (CG(K),K=1,6)
+*         WRITE (6,97)  TIME+TOFF, (CG(K),K=1,6)
 *  97     FORMAT (' REDUCE:   T CG ',F10.5,1P,6E9.1)
 *     END IF
 *

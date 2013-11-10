@@ -54,9 +54,9 @@
   48    18   Unstable triple check (check3.f from GPU adjust.f)
   49     -   Not used
   50     -   Not used
-  51     -   Not used
-  52     -   Not used
-  53     -   Not used
+  51     8   Reduced eccentricity to avoid collision (BINPOP; #27 = 2)
+  52    14   Circular velocity of galactic halo model (#14 = 3)
+  53    11   Used by NBODY7 for SPIN (ARCHAIN; #11 < 0)
   54     *   Close encounter inside 5 maximum radii (ksint.f)
   55     *   Encounter inside tidal capture radius (# 27; ksint.f)
   56     -   Plotting file for TIME, TPHYS, <R>, MASS, NCOLL (# 44 > 0)

@@ -184,6 +184,7 @@
     8                 FORMAT (' ENFORCED CE    RL*SEP ',1P,2E10.2)
                       ECC0 = ECC
                       SEMI0 = SEMI
+                      SEP = SEMI*SU
 *       Correct for mass loss in case of coalescence which ignores DM2.
                       IF (DM*SMU.LT.0.05) THEN
                           CALL FICORR(I,DM)
@@ -294,9 +295,9 @@
 *       Provide diagnostic output if binary survives the kick.
               I = NTOT
               KSTAR(I) = 0
-              IF (H(IPAIR).LT.0.0) THEN
-                  SEMI = -0.5d0*BODY(I)/H(IPAIR)
-                  WRITE (6,35)  KW1, R(IPAIR)/SEMI, SEMI*SU,
+              IF (H(NPAIRS).LT.0.0) THEN
+                  SEMI = -0.5d0*BODY(I)/H(NPAIRS)
+                  WRITE (6,35)  KW1, R(NPAIRS)/SEMI, SEMI*SU,
      &                          BODY(I)*ZMBAR, (XDOT(K,I)*VSTAR,K=1,3)
    35             FORMAT (' WD/NS BINARY    KW R/A A M V ',
      &                                      I4,3F7.2,3F7.1)
@@ -399,14 +400,14 @@
    55 CONTINUE
       NCH1 = NCHAOS
 *       Perform removal of NAMEC on failed search.
-      IF (KK.EQ.0) THEN
+      IF (KK.EQ.0.AND.KSTAR(N+IPAIR).LT.0) THEN
           II = -L
           CALL SPIRAL(II)
       END IF
       IC = IC + 1
 *       Consider the same location again after array update.
       IF (NCHAOS.LT.NCH1) L = L - 1
-      IF (IC.LT.100.AND.NCHAOS.GT.1) GO TO 52
+      IF (IC.LT.NCHAOS+1) GO TO 52
 *
 *       Reverse case indicator for exit from collision routine.
    60 ICASE = -ICASE

@@ -129,7 +129,7 @@
       END IF
 *
 *       Print main output diagnostics.
-      I6 = TSCALE*TTOT
+      I6 = TSTAR*TTOT
 *
       WRITE (6,40)  TTOT, N, NNB, NPAIRS, NMERGE, MULT, NS, NSTEPI,
      &              NSTEPB, NSTEPR, NSTEPU, ERROR, BE(3), ZMASS
@@ -277,7 +277,7 @@
 *
 *       Include optional diagnostics for interstellar clouds on unit 47.
       IF (KZ(13).GT.0) THEN
-          WRITE (47,82)  TSCALE*TTOT, NS, NEWCL, DETOT, E(3),
+          WRITE (47,82)  TSTAR*TTOT, NS, NEWCL, DETOT, E(3),
      &                   RBAR*SQRT(PCL2), RBAR*RSCALE, RBAR*RC
    82     FORMAT (' ',F8.1,I7,I6,2F10.6,F6.2,2F7.3)
           CALL FLUSH(47)
@@ -483,11 +483,15 @@
       CALL FLUSH(3)
 *
 *       Produce output file for tidal tail members.
-   99 IF (KZ(3).LE.3.AND.NTAIL.GT.0) THEN
+   99 IF (KZ(3).LE.3) THEN
           IF (SECOND) THEN
              OPEN (UNIT=33,STATUS='NEW',FORM='UNFORMATTED',FILE='OUT33')
              SECOND = .FALSE.
           END IF
+          NK = 13
+          WRITE (33) NTAIL, MODEL, NK
+*
+      IF (NTAIL.GT.0) THEN
           DO 110 I = ITAIL0,NTTOT
               BODYS(I) = BODY(I)
               DO 105 K = 1,3
@@ -503,14 +507,14 @@
   115     CONTINUE
           AS(10) = TTOT
           AS(11) = RBAR
-          AS(12) = TSCALE
+          AS(12) = TSTAR
           AS(13) = VSTAR
           NK = 13
-          WRITE (33)  NTAIL, NK
           WRITE (33)  (AS(K),K=1,NK), (BODYS(J),J=ITAIL0,NTTOT),
      &                ((XS(K,J),K=1,3),J=ITAIL0,NTTOT),
      &                ((VS(K,J),K=1,3),J=ITAIL0,NTTOT),
      &                (NAME(J),J=ITAIL0,NTTOT)
+      END IF
       END IF
 *
 *       Include all stars in same file (KZ(3) > 3; astrophysical units). 
@@ -540,7 +544,7 @@
   125         CONTINUE
               BODYS(NP) = BODY(I)*SMU
   130     CONTINUE
-          WRITE (34,140)  NP, N1, (TIME+TOFF)*TSCALE, RBAR, VSTAR,
+          WRITE (34,140)  NP, N1, (TIME+TOFF)*TSTAR, RBAR, VSTAR,
      &                    (RDENS(K),K=1,3), (RG(K),K=1,3), (VG(K),K=1,3)
   140     FORMAT (' ',2I6,F8.1,2F6.2,3F7.3,1P,6E10.2)
           DO 150 I = 1,NP

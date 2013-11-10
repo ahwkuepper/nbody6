@@ -624,6 +624,13 @@
           NICONV = NICONV + 1
           GO TO 110
       END IF
+*
+*       Reduce irregular step on switching from zero neighbour number.
+      IF (NNB0.EQ.0.AND.NNB.GT.0) THEN
+          STEP(I) = 0.25*STEP(I)
+          TNEW(I) = T0(I) + STEP(I)
+      END IF
+*
       NSTEPR = NSTEPR + 1
 *
       RETURN

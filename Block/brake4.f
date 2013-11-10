@@ -15,6 +15,11 @@
 *       Check relativistic conditions (at least one >= NS).
       IF (MAX(KSTAR(I1),KSTAR(I2)).LT.13) GO TO 100
 *
+*       See whether CVEL has been initialized in ARchain.
+      IF (ITER.EQ.0.AND.CVEL.EQ.0.0D0) THEN
+          READ (5,*)  CLIGHT
+      END IF
+*
 *       Specify the basic elements from BH or KS treatments.
       M1 = BODY(I1)
       M2 = BODY(I2)

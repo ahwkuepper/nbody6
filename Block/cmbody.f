@@ -6,7 +6,7 @@
 *
       INCLUDE 'common6.h'
       PARAMETER  (NMX=10,NMX4=4*NMX)
-      COMMON/RCLOSE/  RIJ(4,4),RCOLL4,QPERI4,SIZE4(4),ECOLL4,IP(4)
+      COMMON/CLOSE/  RIJ(4,4),RCOLL4,QPERI4,SIZE4(4),ECOLL4,IP(4)
       COMMON/CCOLL2/  QK(NMX4),PK(NMX4),RIK(NMX,NMX),SIZE(NMX),VSTAR1,
      &                ECOLL1,RCOLL,QPERI,ISTAR(NMX),ICOLL,ISYNC,NDISS1
       COMMON/EBSAVE/  EBS
@@ -242,8 +242,6 @@
               ZM2 = BODY(I2)*ZMBAR
               R1 = RADIUS(I1)*SU
               R2 = RADIUS(I2)*SU
-              ECC = 1.0 + 2.0*EBS*DMINC/(BODY(I1)*BODY(I2))
-              ECC = MAX(ECC,0.0D0)
               WRITE (86,9)  TPHYS, NAME(I1), NAME(I2), KSTAR(I1),
      &                      KSTAR(I2), ZM1, ZM2, R1, R2, DMINC*SU, ECC
     9         FORMAT (' COLL:    TPH NAM K* M R* QP E ',
@@ -343,7 +341,7 @@
    16     CONTINUE
           NP = NSYS - 2
           CALL NBPOT(2,NP,POT1)
-*       Compensate EGRAV for any chain mass loss.
+*       Compensate EGRAV for any chain (or TRIPLE/QUAD) mass loss.
           IF (DM.GT.0.0D0) THEN
               EG0 = EGRAV
               DO 18 L = 1,NSYS
@@ -356,8 +354,8 @@
                   EGRAV = EGRAV - DM*BODY(J)/SQRT(RIJ2)
    18         CONTINUE
               WRITE (6,19)  NSYS, EGRAV, EGRAV - EG0
-   19         FORMAT (' CMAIN MASS LOSS    NSYS EGRAV DEGR ',
-     &                                     I4,1P,2E10.2)
+   19         FORMAT (' CHAIN/TRIPLE MASS LOSS    NSYS EGRAV DEGR ',
+     &                                            I4,1P,2E10.2)
           END IF
       END IF
 *
@@ -423,7 +421,7 @@
           JPERT(1) = I1
           CALL NBREM(NTOT,1,1)
       ELSE
-*       Determine index and set neighbour membership of original chain c.m.
+*       Determine index and set neighbour membership of original c.m.
           JLIST(2) = I2
           NNB = 0
           DO 21 L = 1,NSYS
@@ -434,7 +432,7 @@
               END IF
    21     CONTINUE
 *
-*       Update neighbour lists of current chain c.m. and remove ghost I2.
+*       Update neighbour lists of current c.m. and remove ghost I2.
           DO 22 L = 1,NNB
               JPERT(L) = LIST(L+1,ICM)
    22     CONTINUE
@@ -444,14 +442,14 @@
           CALL NBREM(NTOT,1,1)
       END IF
 *
+*       Determine new neighbour list for first CHAIN/TRIPLE member #I1.
+      IF (NSYS.GT.2) THEN
+          RSI = RSCALE*(10.0/FLOAT(N - NPAIRS))**0.3333
+          CALL NBLIST(I1,RSI)
+      END IF
+*
 *       Include correction procedure in case of mass loss (cf routine MIX).
       IF (KZ(19).GE.3.AND.DM.GT.0.0D0) THEN
-*
-*       Determine neighbour list for chain member.
-          IF (NSYS.GT.2) THEN
-              RSI = RSCALE*(10.0/FLOAT(N - NPAIRS))**0.3333
-              CALL NBLIST(I1,RSI)
-          END IF
 *
           NNB = LIST(1,I1)
           ILIST(1) = NNB
@@ -627,6 +625,8 @@
      &             '  M =',F6.2,'  RCOLL =',1P,E8.1,' EB =',E9.1,
      &             '  DP =',E9.1,'  E =',0P,F8.4)
 *
+          R1 = RADIUS(I1)*SU
+          R2 = RADIUS(I2)*SU
           WRITE (26,86)  TTOT, NAME1, NAME2, KSTAR(I1), KSTAR(I2),
      &                   IQCOLL, ZM1, ZM2, DM*ZMBAR, R1, R2, RI/RC,
      &                   RCOLL*SU, ECC, TK

@@ -711,7 +711,7 @@ c     Ixc=1 ! 1 for exact time, 0 for not exact time
           icollision = 0
           IBH = -1
           JBH = 0
-*       Evaluate energy difference for correction purpose.
+*       Evaluate energy difference for correction purpose (note ECH => 0).
           DE = ECH - ENER0
 *       Include energy loss via ECOLL.
           CALL DECORR(DE)
