@@ -57,6 +57,22 @@
           IF (NAMEC(K).EQ.NAME(I)) IC = K
     2 CONTINUE
 *
+*       Try repair procedure if NCHAOS reduced to zero or NAMEC missing.
+      IF (NCHAOS.EQ.0.OR.IC.EQ.0) THEN
+          IC = 1
+          NCHAOS = NCHAOS + 1
+          SEMI = -0.5*BODY(I)/H(IPAIR)
+          ECC2 = (1.0-R(IPAIR)/SEMI)**2 + TDOT2(IPAIR)**2/(BODY(I)*SEMI)
+          ECC = SQRT(ECC2)
+*       Re-initialize basic elements and NAMEC.
+          ES(IC) = ECC
+          RP(IC) = SEMI*(1.0 - ECC)
+          NAMEC(IC) = NAME(I)
+          WRITE (6,4)  NAME(I1), NAME(I), LIST(1,I1), ECC, R(IPAIR)
+    4     FORMAT (' SPIRAL REPAIR    NM NMI NP E RP ',
+     &                               2I7,I4,F8.4,1P,E10.2)
+      END IF
+*
 *       Set non-zero index on call from CHRECT (KSTAR = -KSTAR) for CE skip.
       ISTAR = 0
       IF (KSTAR(I).GT.0) THEN
@@ -482,7 +498,9 @@
    99 CONTINUE   ! Fudge leads to SPIRAL TERM and ENFORCED ROCHE.
 *
 *       Enforce termination at constant angular momentum on Roche condition.
-      IF (DTR.LE.0.1/TSTAR) THEN
+      IF (DTR.LE.0.1/TSTAR.OR.
+     &   (STEP(I1).GT.100.0*TK.AND.KSTAR(J1).GE.5)) THEN
+*       Include also enforcement for AGB stars in unperturbed state.
           AF = SEMI*(1.0 - ECC**2)/(1.0 - ECCM**2)
           H(IPAIR) = -0.5*BODY(I)/AF
           ECOLL = ECOLL + ZMU*(HI - H(IPAIR))

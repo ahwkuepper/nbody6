@@ -258,8 +258,8 @@
    70     CONTINUE
       END IF
 *
-*       Include post-Newtonian terms in the perturbation.
-      IF (MAX(KSTAR(I1),KSTAR(I1+1)).GE.13) THEN
+*       Check for post-Newtonian terms in the perturbation.
+      IF (KZ(14).GT.0.AND.MAX(KSTAR(I1),KSTAR(I1+1)).GE.13) THEN
           IP = KVEC(I1)
 *       Adopt a simple distance criterion for now (weak PN).
           IF (R(IP).LT.1000.0*RZ) THEN

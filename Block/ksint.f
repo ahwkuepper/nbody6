@@ -46,24 +46,16 @@
               IF (ISTAT(KCASE).LT.0) GO TO 100
           END IF
 *
-*       Re-initialize chain WD/BH system after dormant KS (#11 only).
+*       Try re-initialize chain WD/BH system after dormant KS (#11 only).
           IF (KZ(11).NE.0.AND.NCH.EQ.0.AND.LIST(1,I1).GT.0) THEN
-              IF (MIN(KSTAR(I1),KSTAR(I2)).GE.13) THEN
-                  RIJ2 = 0.0
-                  RD = 0.0
-                  DO 220 K = 1,3
-                      RIJ2 = RIJ2 + (X(K,I) - X(K,JCLOSE))**2
-                      RD = RD + (X(K,I) - X(K,JCLOSE))*
-     &                          (XDOT(K,I) - XDOT(K,JCLOSE))
-  220             CONTINUE
-*       Restrict the separation to 10*RMIN and negative velocity.
-                  IF (RIJ2.GT.100.0*RMIN2.AND.RD.GT.0.0) GO TO 100
+              IF (MIN(KSTAR(I1),KSTAR(I2)).GE.10) THEN
                   SEMI = -0.5*BODY(I)/H(IPAIR)
+                  IF (SEMI.GT.10.0*RMIN) GO TO 100
                   WRITE (6,222)  TIME+TOFF, NAME(JCLOSE), KSTAR(I1),
      &                           KSTAR(I2), LIST(1,I1), GAMMA(IPAIR),
-     &                           SEMI
-  222             FORMAT (' ACTIVATE CHAIN    T NMJ K* NP G A  ',
-     &                                        F14.6,I7,3I4,1P,2E10.2)
+     &                           SEMI, R(IPAIR)
+  222             FORMAT (' ACTIVATE CHAIN    T NMJ K* NP G A R ',
+     &                                        F9.1,I7,3I4,1P,3E10.2)
                   KSPAIR = IPAIR
 *       Restore unperturbed motion from BRAKE4 (NP = 0 fixes some problem).
                   IF (GAMMA(IPAIR).LT.1.0D-10) THEN
@@ -85,7 +77,6 @@
                       JCOMP = 0
                   END IF
                   IPHASE = 8
-                  ISTAT(KCASE) = 8
 *       Save KS parameters until end of block-step (JCMAX=0: no extra pert).
                   CALL DELAY(1,KS2)
                   JCMAX = 0
@@ -626,6 +617,7 @@
       IF (KZ(11).NE.0.AND.NCH.EQ.0.AND.BODY(I).GT.10.0*BODYM.AND.
      &   SEMI.LT.RMIN.AND.LIST(1,I1).LE.5.AND.NAME(I).GT.0) THEN
 *
+          IF (SEMI.GT.0.1*RMIN) GO TO 88
 *       Check optional BH condition (prevents mass-loss complications).
           IF (KZ(11).LE.-2) THEN
               IF (KSTAR(I1).NE.14.OR.KSTAR(I2).NE.14) GO TO 88
@@ -663,21 +655,25 @@
    86         FORMAT (' NEW CHAIN   T NMJ NP STEPI STEPJ A RIJ GI EBT ',
      &                              F9.3,I6,I4,1P,6E10.2)
               CALL FLUSH(6)
-*       Initiate chain regularization directly (see IMPACT for JCOMP > N).
+*       Initiate chain regularization directly (B-B or B-S: see IMPACT).
               JCOMP = JCLOSE
               JCMAX = 0
               KSPAIR = IPAIR
-              IF (JCOMP.LE.N) THEN
-                  KS2 = 0
-              ELSE
-                  KS2 = JCOMP - N
-                  IF (KS2.GT.KSPAIR) KS2 = KS2 - 1
-              END IF
               IPHASE = 8
               EBCH0 = EB
-              CALL DELAY(1,KS2)
-*       Specify index for ARC chain initialization (cf. SUBINT).
+*       Distinguish between case of single and binary intruder.
+              IF (JCLOSE.LE.N) THEN
+                  KS2 = 0
+              ELSE
+                  KS2 = JCLOSE - N
+*       Reduce c.m. body location and pair index if IPAIR terminated first.
+                  IF (KS2.GT.IPAIR) JCLOSE = JCLOSE - 1
+                  IF (KS2.GT.IPAIR) KS2 = KS2 - 1
+              END IF
+*       Specify index for ARchain initialization (cf. SUBINT).
               ISTAT(KCASE) = 8
+*       Initialize new ARchain.
+              CALL DELAY(1,KS2)
               GO TO 100
           END IF
       END IF

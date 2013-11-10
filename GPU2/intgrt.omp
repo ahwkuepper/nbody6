@@ -17,11 +17,10 @@
       INTEGER  NXTLST(NMAX),LISTQ(NMAX),NL(20)
       INTEGER  IRR(NMAX),IREG(NMAX),LISTGP(LMAX,NIMAX)
       LOGICAL LOOP,LSTEPM
-      SAVE IQ,ICALL,NQ,LQ,LOOP,LSTEPM,STEPM,ISAVE,JSAVE,ISTART,TBH
+      SAVE IQ,ICALL,NQ,LQ,LOOP,LSTEPM,STEPM,ISAVE,JSAVE,ISTART
       DATA IQ,ICALL,LQ,LOOP,LSTEPM,STEPM /0,2,11,.TRUE.,.FALSE.,0.03125/
       DATA ISAVE,JSAVE,ISTART /0,0,0/
       SAVE TLISTQ,TMIN,ICOMP0,JCOMP0,NPACT,GF,GFD
-      SAVE NXTLST,LISTQ,IRR,IREG,LISTGP
 *     SAVE CPRED,CPRED2,CPRED3
 *     DATA CPRED,CPRED2,CPRED3 /0.0D0,0.0D0,0.0D0/
 *
@@ -35,10 +34,10 @@
 *
 *       Open the GPU libraries on each new run (note nnbmax = NN is printed).
       IF (ISTART.EQ.0) THEN
-          NN = NTOT + 100
+          NN = NTOT + 10
           CALL GPUNB_OPEN(NN)
 *       Set larger value for GPUIRR (note further possible increase of NTOT).
-          NNN = NTOT + 100
+          NNN = NTOT + 10
 *       Increase NNN further for cold start to deal with many KS.
           IF (QVIR.LT.0.01.AND.TIME.EQ.0.0D0) NNN = NTOT + 500
 *       Allow for missing primordial binaries.
@@ -55,7 +54,6 @@
           ELSE
               NPACT = 200
           END IF
-          TBH = TTOT
       END IF
 *
 *       Search for high velocities after escape or KS/chain termination.
@@ -374,7 +372,6 @@
 *
 *       Choose between standard and parallel irregular integration.
       IF (NXTLEN.LE.NPMAX) THEN
-
 *
 *       Correct the irregular steps sequentially.
       DO 48 II = 1,NXTLEN
@@ -595,13 +592,6 @@
               END IF
               IF (IPHASE.LT.0) GO TO 999
           END IF
-      END IF
-*
-*       Include optional plotting of single BH orbits (1 or 2).
-      IF (KZ(45).GT.0.AND.TBH.LT.TIME+TOFF) THEN
-          CALL BHPLOT
-*       Update time interval (try 10 points per time unit).
-          TBH = TBH + 1.0D-01
       END IF
 *
 *       Advance counters and check timer & optional COMMON save (NSUB = 0).

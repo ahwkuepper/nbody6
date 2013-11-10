@@ -1,6 +1,6 @@
-avx       = enable
-chainmode = archain
-ksblock   = on
+#avx       = enable
+#chainmode = archain
+#ksblock   = on
 
 ifeq ($(avx), enable)
 MKOPTIONS += avx=enable
@@ -27,7 +27,7 @@ else
 endif
 
 FC       = gfortran
-FFLAGS   = -O3 -Wall -march=core2 -fopenmp
+FFLAGS   = -O3 -Wall -march=core2
 CXX      = g++ 
 CXXFLAGS = -O3 -Wall -march=core2
 ifeq ($(avx), enable)
@@ -40,14 +40,14 @@ CUDA_PATH = /usr/local/cuda
 SDK_PATH  = /usr/local/cuda/samples
 
 NVCC = $(CUDA_PATH)/bin/nvcc
-NVCC += -arch=sm_30 -Xptxas -v
+NVCC += -arch=sm_20 -Xptxas -v
 NVCC += -I $(SDK_PATH)/common/inc
 ifeq ($(avx), enable)
 NVCC += -Xcompiler "-O3 -Wall -fopenmp -mavx"
 else
 NVCC += -Xcompiler "-O3 -Wall -fopenmp"
 endif
-NVCC += -DWITH_CUDA5
+#NVCC += -DWITH_CUDA5
 
 RUNDIR = ./run
 
@@ -64,14 +64,14 @@ gpu: gpunb.gpu.o gpupot.gpu.o intgrt.o gpucor.o nbintp.o cnbint.o nbint.o start.
 	make gpu -C ./Build -f $(shell pwd)/Makefile.build -j4 $(MKOPTIONS)
 	mv -f ./Build/nbody6 $(RUNDIR)/$(BINNAME).gpu
 
-avx: gpunb.avx.o gpupot.avx.o intgrt.o gpucor.o nbintp.o cnbint.o nbint.o start.o fpoly2a.o adjust.o energy2.o phicor.o cmfirr.o cmfirr2.o checkl2.o kspert.o swap.o scale.o wtime.o cxvpred.o gpuirr.o jpred.o jpred2.o fpcorr2.o repair.o sweep2.o ksres3.o check3.o bhplot.o
+avx: gpunb.avx.o gpupot.avx.o intgrt.o gpucor.o nbintp.o cnbint.o nbint.o start.o fpoly2a.o adjust.o energy2.o phicor.o cmfirr.o cmfirr2.o checkl2.o kspert.o swap.o scale.o wtime.o cxvpred.o gpuirr.o jpred.o jpred2.o fpcorr2.o repair.o sweep2.o ksres3.o check3.o
 	cp -f gpunb.avx.o gpunb.o
 	cp -f gpupot.avx.o gpupot.o
 	cp -f *.o ./Build
 	make sse -C ./Build -f $(shell pwd)/Makefile.build -j4 $(MKOPTIONS)
 	mv -f ./Build/nbody6 $(RUNDIR)/$(BINNAME).avx
 
-sse: gpunb.sse.o gpupot.sse.o intgrt.o gpucor.o nbintp.o cnbint.o nbint.o start.o fpoly2a.o adjust.o energy2.o phicor.o cmfirr.o cmfirr2.o checkl2.o kspert.o swap.o scale.o wtime.o cxvpred.o gpuirr.o jpred.o jpred2.o fpcorr2.o repair.o sweep2.o ksres3.o check3.o bhplot.o
+sse: gpunb.sse.o gpupot.sse.o intgrt.o gpucor.o nbintp.o cnbint.o nbint.o start.o fpoly2a.o adjust.o energy2.o phicor.o cmfirr.o cmfirr2.o checkl2.o kspert.o swap.o scale.o wtime.o cxvpred.o gpuirr.o jpred.o jpred2.o fpcorr2.o repair.o sweep2.o ksres3.o check3.o
 	cp -f gpunb.sse.o gpunb.o
 	cp -f gpupot.sse.o gpupot.o
 	cp -f *.o ./Build
@@ -103,13 +103,13 @@ gpuirr.o: ./irrlib/gpuirr.sse.cpp
 
 endif
 intgrt.o: intgrt.omp.f
-	$(FC) $(FFLAGS) $^ -c -o $@ 
+	$(FC) $(FFLAGS) -fopenmp $^ -c -o $@ 
 
 intgrt.s: intgrt.omp.f
-	$(FC) $(FFLAGS) $^ -S -o $@
+	$(FC) $(FFLAGS) -fopenmp $^ -S -o $@
 
 start.o: start.omp.F
-	$(FC) $(FFLAGS) $^ -c -o $@
+	$(FC) $(FFLAGS) -fopenmp $^ -c -o $@
 
 gpunb.gpu.o: lib/gpunb.velocity.cu
 	$(NVCC) $^ -c -o $@

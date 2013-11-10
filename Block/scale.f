@@ -378,12 +378,12 @@
    86     CONTINUE
       END IF
 *
-*       Check option for reading initial subsystems.
+*       Check option for reading initial subsystems (solar masses).
       IF (KZ(24).GT.0) THEN
           K = KZ(24)
           DO 90 I = 1,K
               READ (5,*)  BODY(I), (X(J,I),J=1,3), (XDOT(J,I),J=1,3)
-              BODY(I) = BODY(I)/ZMBAR
+              BODY(I) = BODY(I)/(ZMBAR*FLOAT(N))
    90     CONTINUE
       END IF
 *

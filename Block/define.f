@@ -96,7 +96,7 @@
 *
 *        if (kz(24).gt.0)
 *
-*       M, X, V Initial subsystem (unscaled; membership = KZ(24)).
+*       M, X, V Initial subsystem (solar masses; membership = KZ(24)).
 ***
 * XTRNL0: if (kz(14).eq.2)
 *

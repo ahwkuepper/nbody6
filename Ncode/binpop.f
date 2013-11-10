@@ -201,10 +201,10 @@
                   ELSE
                       ECC = 0.9*ECC
                   END IF
-                  WRITE (17,46)  I1, I2, ECC, SEMI, SEMI*(1.0-ECC), RT
+                  WRITE (51,46)  I1, I2, ECC, SEMI, SEMI*(1.0-ECC), RT
    46             FORMAT (12X,'REDUCE ECC:    I1 I2 E A PM RT ',
      &                                        2I5,F7.3,1P,3E10.2)
-                  CALL FLUSH(17)
+                  CALL FLUSH(51)
                   GO TO 42
               END IF
           END IF

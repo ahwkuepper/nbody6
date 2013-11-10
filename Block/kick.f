@@ -91,7 +91,6 @@
               DISP = 0.0
           END IF
       END IF
-      IF (KW.EQ.14) DISP = VSTAR
 *     IF (KW.EQ.14) DISP = 0.0
 *
 *       Use Henon's method for pairwise components (Douglas Heggie 22/5/97).

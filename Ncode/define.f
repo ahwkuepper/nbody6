@@ -96,7 +96,7 @@
 *
 *        if (kz(24).gt.0)
 *
-*       M, X, V Initial subsystem (unscaled; membership = KZ(24)).
+*       M, X, V Initial subsystem (solar masses; membership = KZ(24)).
 ***
 * XTRNL0: if (kz(14).eq.2)
 *
@@ -261,13 +261,15 @@
 *                     >=2: fine-tuning at NNBMAX/5; =3: reduction of NNBMAX.
 *      41  Pre-mainsequence stellar evolution (only solar metallicity).
 *      42  Kozai diagnostics on fort.42 (=1: frequency 100 & EMAX > 0.99).
-*      43  Small velocity kick after GR coalescence (NBODY7 only).
+*      43  Small velocity kick after GR coalescence (=1, =3; NBODY7 only),
+*                         =2: BH accretion of disrupted star, KSTAR >= 10.
 *      44  Plotting file for main cluster parameters on fort.56 (OUTPUT).
 *      45  Plotting file for BH (NAME = 1 or 2) on unit 45 (routine BHPLOT);
 *                      primordial BH defined by INSTAR; membership = KZ(24).
-*      46  Reserved for NBODY6+.
-*      47  Reserved for NBODY6+.
-*      48  GPU initialization of neighbour lists and forces.
+*      46  Reserved for data analysis project on NBODY6++.
+*      47  Reserved for data analysis project on NBODY6++.
+*      48  GPU initialization of neighbour lists and forces (FPOLY0).
+*      49  Post-Newtonian perturbations included in KS (dir Block).
 *       ---------------------------------------------------------------------
 *
 * NBODY6: Restart from fort.1
