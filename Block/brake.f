@@ -40,7 +40,15 @@
               CALL FLUSH(6)
           END IF
           IF (ICIRC.GT.0.AND.TC.LT.100.0) THEN
-              CALL KSTIDE(IPAIR,QPERI)
+*       Send dummy argument for defining collision/coalescence.
+              KCASE = 0
+              CALL KSTIDE(IPAIR,KCASE,QPERI)
+              IF (KCASE.LT.0) THEN
+                  KSPAIR = IPAIR
+                  IQCOLL = 1
+                  CALL CMBODY(R(IPAIR),2)
+*       Note other cases are at end of KSTIDE using JPHASE < 0.
+              END IF
               GO TO 50
           END IF
       END IF

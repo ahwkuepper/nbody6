@@ -27,11 +27,12 @@
       COMMON/INCOND/  X4(3,NMX),XDOT4(3,NMX)
 *
 *
-*       Identify the dominant perturber (skip if none or NN >= 6).
+*       Identify the dominant perturber (skip if none or NN >= 5).
       ITRY = 0
       JCLOSE = 0
     1 NNB = LISTC(1)
-      IF (NNB.EQ.0.OR.NN.GE.6) GO TO 10
+      IF (NNB.EQ.0.OR.NN.GE.5) GO TO 10
+*       Note NN = 6 (NN = 4 + binary) is allowed but not for termination.
       PMAX = 0.0
       DO 2 L = 2,NNB+1
           J = LISTC(L)
@@ -166,7 +167,7 @@
           END IF
 *
 *       Switch off any slow-down before increasing the chain (cf. new step).
-          IF (KSLOW2) THEN
+          IF (KSLOW2.AND.KZ(26).GE.2) THEN
               FAC = 1.0
               DO 7 K = 1,NCH-1
                   FAC = MAX(KSCH(K),FAC)
@@ -206,6 +207,7 @@
           END IF
 *
 *       Absorb the perturber (single particle or binary).
+          IF (JCLOSE.GT.N.AND.NN.GE.5) GO TO 10
           CALL ABSORB(ISUB)
 *
 *       Reduce block-time since new c.m. step may be very small.
@@ -304,13 +306,14 @@
           RJB = 1.0/RINV(JBIN)
 *       Consider removal of outermost particle instead if binary is wide.
           IF (RB.GT.0.25*RJB) THEN
-*       Change pointer to end of chain and redefine IESC.
+*       Change pointer to end of chain and redefine IESC (with JESC = 0).
               IF (ISORT(1).EQ.2) THEN
                   ISORT(1) = 1
               ELSE
                   ISORT(1) = NN - 1
               END IF
               IESC = JESC
+              JESC = 0
               GO TO 30
           END IF
       ELSE

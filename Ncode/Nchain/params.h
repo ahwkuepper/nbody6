@@ -1,1 +1,0 @@
-../Ncode/params.h

@@ -204,7 +204,7 @@
      &        (GI.GT.0.5.AND.TD2.GT.0.0)) THEN
 *       Skip termination delay in case of velocity kick (cf. routine KSTERM).
               IF (HI.LT.100.0.OR.GI.GT.0.1.OR.RI.GT.5.0*RMIN) THEN
-                  IQ = .TRUE.
+                  IF (TD2.GT.0.0) IQ = .TRUE.
               END IF
           END IF
       END IF
@@ -305,15 +305,16 @@
       IF (NAME(I).LT.0) THEN
 *       Terminate if apocentre perturbation > 0.25 (R > SEMI) or GI > 0.25.
           IF (HI.LT.0.0) THEN
-              SEMI = -0.5*BODY(I)/HI
+*             SEMI = -0.5*BODY(I)/HI
 *             ECC2 = (1.0 - RI/SEMI)**2 + TDOT2(IPAIR)**2/(BODY(I)*SEMI)
 *             A0 = SEMI*(1.0 + SQRT(ECC2))/RI
 *       Replace eccentricity calculation with typical value.
-              A0 = 1.5*SEMI/RI
-              GA = GI*A0*A0*A0
-              IF (GA.GT.0.25.AND.RI.GT.SEMI) IQ = .TRUE.
-              IF (RI.GT.20*RMIN.AND.NNB0.GT.0.8*LIST(1,I)) IQ = .TRUE.
+*             A0 = 1.5*SEMI/RI
+*             GA = GI*A0*A0*A0
+*             IF (GA.GT.0.25.AND.RI.GT.SEMI) IQ = .TRUE.
+              IF (RI.GT.10*RMIN.AND.NNB0.GT.0.8*LIST(1,I)) IQ = .TRUE.
               IF (GI.GT.0.1.AND.RI.GT.RMIN) IQ = .TRUE.
+              IF (GI.GT.0.01.AND.RI.GT.5.0*RMIN) IQ = .TRUE.
               IF (GI.GT.0.25) IQ = .TRUE.
 *       Include extra condition for planet case.
               IF (MIN(BODY(I1),BODY(I2)).LT.0.05*BODYM) THEN
@@ -431,6 +432,8 @@
                           CALL KSPERI(IPAIR)
                           KSPAIR = IPAIR
                           IQCOLL = -2
+      WRITE (6,600)  NSTEPU, QPERI
+  600 FORMAT (' CALL CMBODY   # QP ',I11,1P,E10.2)
                           CALL CMBODY(QPERI,2)
                       ELSE IF (KSTAR(I).GE.0.AND.KZ(27).GT.0) THEN
                           CALL KSTIDE(IPAIR,QPERI)
@@ -685,9 +688,10 @@
 *
 *       See whether a massive BH subsystem can be selected.
       IF (KZ(11).NE.0.AND.NCH.EQ.0.AND.BODY(I).GT.10.0*BODYM.AND.
-     &   SEMI.LT.RMIN.AND.LIST(1,I1).LE.5.AND.NAME(I).GT.0) THEN
+     &   SEMI.LT.7.0*RMIN.AND.LIST(1,I1).LE.10.AND.NAME(I).GT.0) THEN
+*    &   SEMI.LT.RMIN.AND.LIST(1,I1).LE.5.AND.NAME(I).GT.0) THEN
 *
-          IF (SEMI.GT.0.1*RMIN) GO TO 88
+*     IF (SEMI.GT.0.1*RMIN) GO TO 88
 *       Check optional BH condition (prevents mass-loss complications).
           IF (KZ(11).LE.-2) THEN
               IF (KSTAR(I1).NE.14.OR.KSTAR(I2).NE.14) GO TO 88

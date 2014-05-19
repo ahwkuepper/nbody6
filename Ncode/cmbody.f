@@ -163,6 +163,7 @@
                   IF (MAX(K1,K2).GT.0) ICASE = MAX(K1,K2)
               ELSE
                   ICASE = KTYPE(K1,K2)
+                  IF (MAX(K1,K2).EQ.14) ICASE = 200
               END IF
               IF(ICASE.GT.100)THEN
                   IQCOLL = 4
@@ -226,7 +227,10 @@
           IQCOLL = 5
           KSTARI = 0
           VINF = 0.0
-          ECC = 1.0 + 2.0*EBS*DMINC/(BODY(I1)*BODY(I2))
+          DMINC = MIN(DMINC,RCOLL)
+          SEMI = -0.5*BODY(I1)*BODY(I2)/EBS
+*       Note the QUAD common also used for TRIPLE.
+          ECC = 1.0 - RCOLL4/SEMI
           ECC = MAX(ECC,0.001D0)
           IF (EBS.GT.0) THEN
               HI = EBS*(BODY(I1) + BODY(I2))/(BODY(I1)*BODY(I2))

@@ -121,15 +121,9 @@
           ENDIF
 *
 *       Convert from solar radii to scaled units (assume Sun = 1/215 AU).
-          IF (KZ(27).EQ.-2) THEN
-              RADIUS(I) = 0.d0
-              ZLMSTY(I) = 0.d0
-              SPIN(I) = 0.d0
-          ELSE
-              RADIUS(I) = RM/SU
-              ZLMSTY(I) = LUM
-              SPIN(I) = JSPIN/SPNFAC
-          END IF
+          RADIUS(I) = RM/SU
+          ZLMSTY(I) = LUM
+          SPIN(I) = JSPIN/SPNFAC
 *
 *       Check neutron star option for GR capture (avoid large masses).
           IF (KZ(27).EQ.3.AND.KZ(28).EQ.4) THEN
