@@ -36,7 +36,7 @@
           IF (TC.LT.100.0) THEN
               KX = MAX(KSTAR(I1),KSTAR(I2))
               WRITE (6,3)  ICIRC, KX, ECC, QPERI*SU, TC, MAX(R1,R2)
-    3         FORMAT (' TCIRC CHECK   IC K* E QP TC R* ',2I5,1P,3E10.2)
+    3         FORMAT (' TCIRC CHECK   IC K* E QP TC R* ',2I5,1P,4E10.2)
               CALL FLUSH(6)
           END IF
           IF (ICIRC.GT.0.AND.TC.LT.100.0) THEN

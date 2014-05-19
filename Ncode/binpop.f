@@ -110,7 +110,7 @@
 *
 *       Generate semi-major axis (new option added 4/8/05, modified 27/7/10).
           IF (KZ(8).EQ.4) THEN
-*       Adopt Pavel Kroupa (1995, Eq.11b) distribution for semi-major axis.
+*       Adopt Kroupa binary parameters (MNRAS 277, 1491, Eq.11b & 277, 1507).
              exp1 = EXP(2.D0*RAN2(IDUM1)/2.5D0) - 1.D0
              exp1 = SQRT(exp1*45.D0) + 1.D0
 *       Specify period in yrs.
@@ -138,7 +138,7 @@
               IC3 = 0
               ZMB = (BODY(I1) + BODY(I2))*ZMBAR
 *       Include minimum period (copy RANGE; at least 1 day).
-              PMIN = MAX(RANGE,1.0D0)
+              PMIN = MAX(RANGE,1.0D0)  ! Note RANGE is now minimum period.
               IT = 0
    35         XR = RAN2(IDUM1)
 *       Generate period distribution (Pavel Kroupa: MN 277, 1491, eq.11b).

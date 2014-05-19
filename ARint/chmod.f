@@ -1,4 +1,4 @@
-      SUBROUTINE CHMOD(ISUB,KCASE)
+      SUBROUTINE CHMOD(ISUB,KCASE,IESC,JESC)
 *
 *
 *       Modification of chain member(s).
@@ -25,6 +25,8 @@
       DATA IT,IWARN /0,0/
 *
 *
+      IESC = 0
+      JESC = 0
 *       Copy chain variables to standard form.
       LK = 0
       DO 3 L = 1,NCH
@@ -195,7 +197,7 @@
      &                       SEMI*(1.0-ECC), 5.0*RGRAV, GPERT
   140         FORMAT (' SKIP HEAVY   # NM E A PM 5*RG GP ',
      &                               I8,I4,F8.4,1P,4E10.2)
-              CALL FLUSH(3)
+              CALL FLUSH(6)
               END IF
               GO TO 10
           END IF
@@ -486,7 +488,7 @@
           WRITE (6,12)  IESC, JESC, NSTEP1, ISORT(1),
      &                  (1.0/RINV(K),K=1,NN-1)
    12     FORMAT (' CHMOD:    IESC JESC # ISORT1 R ',2I3,I5,I3,1P,5E9.1)
-          CALL FLUSH(3)
+          CALL FLUSH(6)
       END IF
 *
 *       Distinguish between binary and single particle.
@@ -513,8 +515,8 @@
           JBIN = IBIN + 1
           IF (IBIN.EQ.NN - 1) JBIN = IBIN - 1
           RJB = 1.0/RINV(JBIN)
-*       Ensure removal of widest binary (maybe not as KS) at RSUM > 30*RMIN.
-          IF (RSUM.GT.30.0*RMIN.AND.RB.GT.0.25*RJB) THEN
+*       Ensure removal of widest binary (maybe not as KS) at RSUM > 10*RMIN.
+          IF (RSUM.GT.10.0*RMIN.AND.RB.GT.0.25*RJB) THEN
               JBIN = NN - 1
               IF (JBIN.EQ.IBIN) IBIN = 1
               RB = 1.0/RINV(IBIN)
@@ -525,13 +527,14 @@
           END IF
 *       Consider removal of outermost particle instead if binary is wide.
           IF (RB.GT.0.25*RJB) THEN
-*       Change pointer to end of chain and redefine IESC.
+*       Change pointer to end of chain and redefine IESC (with JESC = 0).
               IF (ISORT(1).EQ.2) THEN
                   ISORT(1) = 1
               ELSE
                   ISORT(1) = NN - 1
               END IF
               IESC = JESC
+              JESC = 0
               GO TO 20
           END IF
       ELSE
@@ -601,6 +604,7 @@
                   WRITE (6,18)  IESC, JESC, NAMEC(IESC), NAMEC(JESC),
      &                          RI, RDOT**2, 2.0*BODY(ICH)/RI, RB
                   CM(9) = CM(9) - EB
+                  KCASE = 1
                   GO TO 40
               ELSE
 *       Check splitting into two KS solutions (R1 + R3 < R2/5 & RDOT > VC).
@@ -638,11 +642,11 @@
               END IF
 *       Enforce termination (KCASE < 0) if NCH <= 4 (final membership <= 2).
               IF (NCH.LE.4) THEN
-*                 KCASE = -1
-                  KCASE = 1
+                  KCASE = -1
                   GO TO 40
               END IF
               CM(9) = CM(9) - EB
+              KCASE = 1
               GO TO 40
           END IF
       ELSE
@@ -963,7 +967,7 @@
      &                      2.0*BODY(ICH)/RI, VINF, GPERT
    36         FORMAT (' CHAIN ESCAPE:    IESC NM RI RDOT2 2*M/R VF GP ',
      &                                   I3,I6,1P,3E9.1,0P,F6.1,1P,E9.1)
-              CALL FLUSH(3)
+              CALL FLUSH(6)
           END IF
 *       Ensure single body is removed in case of wide binary.
           JESC = 0
@@ -974,8 +978,7 @@
 *
 *       Reduce chain membership (NCH > 3) or specify termination.
    40 IF (NCH.GE.3) THEN
-          IF (RI.GT.20.0*RMIN) GO TO 99
-          IF (VINF.GT.5.0.AND.RI.GT.3.0*RMIN) GO TO 99
+          IF (RI.GT.3.0*RMIN) GO TO 99
           IF (VINF.GT.0.0.AND.RI.GT.5.0*RMIN.AND.RDOT.GT.0.0) GO TO 99
 *       Subtract largest chain distance from system size (also binary).
 *         IM = ISORT(1)
@@ -1033,7 +1036,8 @@
      &                            F10.3,I4,I7,1P,2E10.2)
           END IF
 *
-   99     CALL REDUCE(IESC,JESC,ISUB)
+*  99     CALL REDUCE(IESC,JESC,ISUB)
+   99     CONTINUE
 *     ELSE
 *         KCASE = -1
       END IF
@@ -1041,7 +1045,6 @@
 *       Set phase indicator < 0 to ensure new NLIST in routine INTGRT.
    50 IPHASE = -1
 *
-      CALL FLUSH(6)
    60 RETURN
 *
       END

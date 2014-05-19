@@ -24,7 +24,6 @@
       COMMON/CPERT/  RGRAV,GPERT,IPERT,NPERT
       COMMON/ECHAIN/  ECH
       COMMON/KSAVE/ K1,K2
-      COMMON/SOFT/  EPS2
       DATA TCALL /0.0D0/
       REAL*8  XCM(3),VCM(3),DXC(3),DVC(3),FIRR(3),FD(3),XREL(3),
      &        VREL(3),XX(3,3),VV(3,3),X0S(3),V0S(3),XS(3),VS(3),G(3)
@@ -50,8 +49,6 @@
     3 CONTINUE
 *       Determine dominant chain force for elements of innermost binary.
       FX = 0.0
-      I1 = 1
-      I2 = 2
       DO 4 K = 1,NCH-1
          K1 = INAME(K)
          K2 = INAME(K+1)
@@ -199,11 +196,11 @@
                   CALL INCLIN(XX,VV,XCM,VCM,ALPH)
                   ZI = 360.0*ALPH/TWOPI
               END IF
-              WRITE (41,108)  NAME(JM), TIME, ZI, BODY(JM), RIJ,
+              WRITE (40,108)  NAME(JM), TIME, ZI, BODY(JM), RIJ,
      &                        ECC, SEMIJ
   108         FORMAT (' HEAVY   NAM T INC M RIJ E A ',
      &                          I7,2F7.1,1P,2E10.2,0P,F7.3,1P,E10.2)
-              CALL FLUSH(41)
+              CALL FLUSH(40)
           END IF
       END IF
 *
@@ -223,11 +220,6 @@
 *       Re-define initial epoch for consistency (ignore phase error).
 ***   T0S(ISUB) = TIME - TIMEC
 *       NB!!! This looks risky - hence suppress!!
-*
-      IF (KZ(30).GT.2) THEN
-          WRITE (6,1)  TIME0+TOFF, TIME+TOFF
-    1     FORMAT (' REDUCE:   TIME0 TIME ',2F10.6)
-      END IF
 *
 *       Check whether to treat two singles instead of KS (case of JESC > 0).
       IF (JESC.GT.0) THEN
@@ -265,24 +257,6 @@
     8     CONTINUE
           DPOT = DPOT + BODYC(L)*BODYC(IESC)/SQRT(RIJ2)
    10 CONTINUE
-*
-*       Include differential energy correction due to any softening.
-      DP = 0.0
-      L = IESC
-  110 DO 115 KK = 1,NCH
-          IF (KK.EQ.IESC.OR.KK.EQ.JESC) GO TO 115
-          RIJ2 = 0.0
-          DO  112 K = 1,3
-              RIJ2 = RIJ2 + (X4(K,L) - X4(K,KK))**2
-  112     CONTINUE
-          DP = DP + M(L)*M(KK)*(1.0/SQRT(RIJ2+EPS2)-1.0/SQRT(RIJ2))
-  115 CONTINUE
-      IF (L.EQ.IESC.AND.JESC.GT.0) THEN
-          L = JESC
-          GO TO 110
-      END IF
-*       Subtract the net potential energy change on escape.
-      ECOLL = ECOLL - DP
 *
 *       Reduce chain membership and mass (global & local COMMON).
       NCH = NCH - 1
@@ -470,7 +444,7 @@
 *       Make new neighbour list for escaper.
       CALL NBLIST(I,RS0)
 *
-*       Distinguish between single particle(s) and binary (JESC = 0 or > 0).
+*      Distinguish between single particle(s) and binary (JESC = 0 or > 0).
       IF (JESC.EQ.0.OR.ISING.GT.0) THEN
 *       Initialize force polynomials & time-steps (add differential F & FD).
           IPHASE = 8
@@ -503,6 +477,8 @@
               ISING = 2
               GO TO 2
           END IF
+*      Ensure single escape removal for original JESC = 0.
+          IF (JESC.EQ.0) JESC = -1
           IPHASE = -1
 *       Include case of escaping binary (set JESC < 0 for new KS).
       ELSE IF (JESC.GT.0) THEN
@@ -607,12 +583,12 @@
               ECOLL = ECOLL + (ENER1 - DEGR) - DPHI
 *       Clean current chain variables to allow another new case.
               ECH = 0.0
-              NSUB = NSUB - 1
-              NCH = 0
 *       Set large time to prevent CALL CHAIN while c.m. is escaping.
               TS(ISUB) = 1.0D+10
 *       Specify zero indicator for immediate exit from chain with NCH = 0.
-              ISUB = 0
+*             ISUB = 0
+*             NSUB = MAX(NSUB - 1,0)
+              NCH = 0
 *       Redefine chain c.m. as single to allow new case.
               NAME(ICH) = 99999
               IF (KZ(37).GT.0) CALL HIVEL(ICH)
@@ -661,6 +637,8 @@
 *  97     FORMAT (' REDUCE:   T CG ',F10.5,1P,6E9.1)
 *     END IF
 *
+*       Ensure zero second indicator for next call of single escaper.
+      IF (JESC.LT.0) JESC = 0
       TIME = TIME0
 *
   100 RETURN

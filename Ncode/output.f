@@ -271,7 +271,7 @@
       END IF
 *
 *       Check optional output of single bodies & binaries.
-      IF (KZ(9).GT.0.OR.KZ(6).GT.0) THEN
+      IF (KZ(6).GT.0) THEN
           CALL BODIES
       END IF
 *
@@ -284,10 +284,10 @@
           PCL2 = RB2
       END IF
 *
-*       See whether to write data bank of binary diagnostics on unit 9.
-      IF (KZ(8).GE.2.AND.NPAIRS.GT.0) THEN
+*       See whether to write data bank of binary diagnostics on units 9 & 19.
+      IF (KZ(9).GT.0) THEN
           CALL BINDAT
-          IF (KZ(8).GT.3) THEN
+          IF (KZ(9).GT.1.AND.NMERGE.GT.0) THEN
               CALL HIDAT
           END IF
       END IF

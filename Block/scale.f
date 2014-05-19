@@ -5,7 +5,7 @@
 *       ---------------------
 *
       INCLUDE 'common6.h'
-      REAL*8  RSAVE(3,NMAX),VSAVE(3,NMAX),BSAVE(NMAX)
+      REAL*8  RSAVE(3,2*KMAX),VSAVE(3,2*KMAX),BSAVE(2*KMAX)
       real*8 G, M_sun, R_sun, pc, Km, Kmps
       real*8 mscale, lscale, vscale
       SAVE RSAVE,VSAVE,BSAVE
@@ -375,6 +375,7 @@
           DO 86 I = 1,N
               write (99,84)  BODY(I)*mscale, (X(K,I)*lscale,K=1,3),
      &                       (XDOT(K,I)*vscale,K=1,3)
+              BODY0(I) = BODY(I)
    86     CONTINUE
       END IF
 *
