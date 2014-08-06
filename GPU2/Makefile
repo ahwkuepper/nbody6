@@ -1,5 +1,5 @@
-avx       = enable
-chainmode = archain
+avx       = disable
+chainmode = chain
 ksblock   = off
 
 ifeq ($(avx), enable)
@@ -26,9 +26,9 @@ else
  endif
 endif
 
-FC       = gfortran
+FC       = gfortran-mp-4.7
 FFLAGS   = -O3 -Wall -march=core2
-CXX      = g++ 
+CXX      = g++-mp-4.7 
 CXXFLAGS = -O3 -Wall -march=core2 
 #For Brisbane:
 #FC    	  = gfortran
@@ -42,9 +42,8 @@ CXXFLAGS += -mavx
 endif
 
 CUDA_PATH = /usr/local/cuda
-#SDK_PATH  = /usr/local/cuda_sdk
-
-SDK_PATH  = /usr/local/cuda/samples
+SDK_PATH  = /Developer/NVIDIA/CUDA-6.0/samples
+#SDK_PATH  = /usr/local/cuda/samples
 #For Brisbane:
 #SDK_PATH=/home/uqhbaumg/NVIDIA_GPU_Computing_SDK/C
 
@@ -59,11 +58,11 @@ NVCC += -arch=sm_30 -Xptxas -v
 
 NVCC += -I $(SDK_PATH)/common/inc
 ifeq ($(avx), enable)
-NVCC += -Xcompiler "-O3 -Wall -fopenmp -mavx"
+NVCC += -ccbin gcc-mp-4.7 -Xcompiler "-O3 -Wall -mavx -fopenmp"
 else
-NVCC += -Xcompiler "-O3 -Wall -fopenmp"
+NVCC += -ccbin gcc-mp-4.7 -Xcompiler "-O3 -Wall -fopenmp"
 endif
-#NVCC += -DWITH_CUDA5
+NVCC += -DWITH_CUDA5
 
 RUNDIR = ./run
 #For Brisbane:

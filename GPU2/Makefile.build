@@ -1,4 +1,4 @@
-FC = gfortran -fPIC
+FC = gfortran-mp-4.7 -fPIC
 FFLAGS = -Wall -O3 -ffast-math 
 #FFLAGS +=  -fbounds-check
 #FFLAGS +=  -traceback
@@ -16,18 +16,18 @@ endif
 #FFLAGS += -march=nocona
 #endif
 
-LIBCUDA = -L /usr/local/cuda/lib64 -lcudart
+LIBCUDA = -L /usr/local/cuda/lib -lcudart
 
-LD_GPU = gfortran -lstdc++ -fopenmp $(LIBCUDA)
+LD_GPU = gfortran-mp-4.7 -lstdc++ -fopenmp $(LIBCUDA)
 LD_GPU += -fPIC
 
-LD_GPU += -B /usr/share/libhugetlbfs -Wl,--hugetlbfs-link=B
+#LD_GPU += -B /usr/share/libhugetlbfs -Wl,--hugetlbfs-link=B
 #For Bribane:
 ##LD_GPU += -B /usr/share/libhugetlbfs -Wl,--hugetlbfs-link=B
 
-LD_SSE = gfortran -lstdc++ -fopenmp
+LD_SSE = gfortran-mp-4.7 -lstdc++ -fopenmp
 
-LD_SSE += -B /usr/share/libhugetlbfs -Wl,--hugetlbfs-link=B
+#LD_SSE += -B /usr/share/libhugetlbfs -Wl,--hugetlbfs-link=B
 #For Brisbane:
 ##LD_SSE += -B /usr/share/libhugetlbfs -Wl,--hugetlbfs-link=B
 

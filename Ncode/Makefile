@@ -11,8 +11,8 @@ CFLAGS = -O3
 #FFLAGS = -O3
 #FC = f77
 #LD = f77
-FC = gfortran
-LD = gfortran -lstdc++ -fopenmp
+FC = gfortran-mp-4.7
+LD = gfortran-mp-4.7 -lstdc++ -fopenmp
 
 VPATH = ../Chain:../Nchain
 
