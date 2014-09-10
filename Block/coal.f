@@ -20,9 +20,13 @@
           DT = 0.1d0*STEP(I)
           IF (DT.GT.2.4E-11) THEN
               TIME2 = TIME - TPREV
-              CALL STEPK(DT,DTN)
-              TIME = TPREV + INT((TIME2 + DT)/DTN)*DTN
-              TIME = MIN(TBLOCK,TIME)
+              IF (TIME2.LE.16.0*STEP(I)) THEN
+                  CALL STEPK(DT,DTN)
+                  TIME = TPREV + INT((TIME2 + DT)/DTN)*DTN
+                  TIME = MIN(TBLOCK,TIME)
+              ELSE
+                  TIME = MIN(T0(I) + STEP(I),TBLOCK)
+              END IF
           ELSE
               TIME = MIN(T0(I) + STEP(I),TBLOCK)
           END IF
@@ -186,11 +190,11 @@
          TEV(I1) = TEV(I2)
          SPIN(I1) = SPIN(I2)
          RADIUS(I1) = RADIUS(I2)
+         RADIUS(I2) = 0.0
          NAME2 = NAME(I2)
          NAME(I2) = NAME(I1)
          NAME(I1) = NAME2
       ENDIF
-      RADIUS(I2) = 0.0
       T0(I1) = TIME
       T0(I2) = TADJ + DTADJ 
       IF (KZ(23).EQ.0.OR.RTIDE.GT.1000.0*RSCALE) T0(I2) = 1.0D+10
@@ -203,7 +207,7 @@
       TEV(I2) = 1.0d+10
       VI = SQRT(XDOT(1,I2)**2 + XDOT(2,I2)**2 + XDOT(3,I2)**2)
 *
-*       Set T0 = TIME for any other chain members.
+*	Set T0 = TIME for any other chain members.
       IF (IPAIR.LT.0) THEN
          DO 18 L = 1,NCH
             J = JLIST(L)
@@ -400,6 +404,8 @@
      &             '  DP =',E9.1,'  DM =',0P,F6.2,'  VINF =',F4.1)
 *
       KSTAR(I1) = KW1
+*       Ensure a BH does not get a smaller type (should not happen).
+      IF (KSTAR(I2).EQ.14) KSTAR(I1) = 14
       KSTAR(I2) = 15
 *       Specify IPHASE < 0 for new sorting.
       IPHASE = -1

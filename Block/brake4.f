@@ -16,7 +16,7 @@
       IF (MAX(KSTAR(I1),KSTAR(I2)).LT.13) GO TO 100
 *
 *       See whether CVEL has been initialized in ARchain.
-      IF (ITER.EQ.0.AND.CVEL.EQ.0.0D0) THEN
+      IF (ITER.EQ.0) THEN
           READ (5,*)  CLIGHT
       END IF
 *
@@ -57,6 +57,7 @@
 *       Impose limit of time-step if THETA > TWOPI.
       IF (THETA.GT.TWOPI) THEN
           DT = TWOPI*TK/DW
+          THETA = DMOD(THETA,TWOPI)
       END IF
 *       Note new algorithm for quantized value of DT (3/2013).
       CALL STEPK(DT,DTN)

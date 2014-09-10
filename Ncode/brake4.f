@@ -6,7 +6,6 @@
 *
       INCLUDE 'common6.h'
       COMMON/POSTN/  CVEL,TAUGR,RZ1,GAMMAZ,TKOZ,EMAX,TSP,KZ24,IGR,IPN
-      COMMON/KSPAR/  ISTAT(KMAX)
       REAL*8 M1,M2,UI(4),UIDOT(4)
       SAVE ITER
       DATA ITER /0/
@@ -58,6 +57,7 @@
 *       Impose limit of time-step if THETA > TWOPI.
       IF (THETA.GT.TWOPI) THEN
           DT = TWOPI*TK/DW
+          THETA = DMOD(THETA,TWOPI)
       END IF
       STEP(I1) = DT
 *     THETA = DMOD(THETA,TWOPI)   ! original condition.
@@ -101,8 +101,8 @@
 *
       ITER = ITER + 1
       IF (ITER.LT.1000.OR.MOD(ITER,1000).EQ.0) THEN
-          WRITE (94,40)  TIME+TOFF, ECC, THETA, DT, TGR, SEMI
-   40     FORMAT (' GR SHRINK    T E TH DT TGR A ',
+          WRITE (94,35)  TIME+TOFF, ECC, THETA, DT, TGR, SEMI
+   35     FORMAT (' GR SHRINK    T E TH DT TGR A ',
      &                           F11.4,F9.5,1P,3E9.1,E12.4)
           CALL FLUSH(94)
       END IF
@@ -115,20 +115,20 @@
           LIST(2,I1) = JP
 *       Set PN indicator for ARCHAIN (TGR limit means small TZ).
           IPN = 3
-          WRITE (6,44)  JP, NAME(JP), STEP(I1), STEP(I), SEMI, TGR
-   44     FORMAT (' ENFORCED PERTURB    JP NM S1 SI A TZ',2I6,1P,5E10.2)
+          WRITE (6,40)  JP, NAME(JP), STEP(I1), STEP(I), SEMI, TGR
+   40     FORMAT (' ENFORCED PERTURB    JP NM S1 SI A TZ',2I6,1P,5E10.2)
+          IF (TGR.LT.0.01) GO TO 42
           GO TO 100
       END IF
 *
-*       Activate coalescence condition using local index.
-      JPHASE = 0
-      IF (SEMI1.LT.100.0*RZ.AND.TGR.LT.0.1) THEN
+*       Activate coalescence condition using COMMON index.
+   42 IF ((SEMI1.LT.100.0*RZ.AND.TGR.LT.0.1).OR.TGR.LT.0.01) THEN
           WRITE (6,45)  KSTAR(I1), KSTAR(I2), RADIUS(I1), RADIUS(I2),
      &                  SEMI1
    45     FORMAT (' PN COAL    K* R1 R2 A  ',2I4,1P,3E10.2)
           CALL FLUSH(6)
           IQCOLL = -2
-          JPHASE = -1
+          IPHASE = -1
 *         KSPAIR = IPAIR
 *         CALL CMBODY(SEMI1,2)
 *
@@ -160,8 +160,6 @@
               CALL FPOLY2(I,I,0)
           END IF
       END IF
-*
-      IF (ISTAT(KCASE).EQ.0) ISTAT(KCASE) = JPHASE
 *
   100 RETURN
 *

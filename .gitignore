@@ -6,3 +6,5 @@ nbody6
 nbody6_gpu
 nbody6_sse
 GPU2/run/*
+nbody7.sse
+nbody6.sse

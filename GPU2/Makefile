@@ -29,7 +29,7 @@ endif
 FC       = gfortran-mp-4.7
 FFLAGS   = -O3 -Wall -march=core2
 CXX      = g++-mp-4.7 
-CXXFLAGS = -O3 -Wall -march=core2 
+CXXFLAGS = -O3 -Wall -march=core2
 #For Brisbane:
 #FC    	  = gfortran
 #FFLAGS   = -O3 -Wall -fopenmp -march=nocona

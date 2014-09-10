@@ -138,7 +138,7 @@
               IC3 = 0
               ZMB = (BODY(I1) + BODY(I2))*ZMBAR
 *       Include minimum period (copy RANGE; at least 1 day).
-              PMIN = MAX(RANGE,1.0D0)
+              PMIN = MAX(RANGE,1.0D0)  ! Note RANGE is now minimum period.
               IT = 0
    35         XR = RAN2(IDUM1)
 *       Generate period distribution (Pavel Kroupa: MN 277, 1491, eq.11b).

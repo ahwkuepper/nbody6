@@ -1,5 +1,5 @@
 FC = gfortran-mp-4.7 -fPIC
-FFLAGS = -Wall -O3 -ffast-math 
+FFLAGS = -Wall -O3 -ffast-math
 #FFLAGS +=  -fbounds-check
 #FFLAGS +=  -traceback
 #FFLAGS +=  -pg

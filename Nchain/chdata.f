@@ -14,7 +14,7 @@
       COMMON/CHAINC/  XC(3,NCMAX),UC(3,NCMAX),BODYC(NCMAX),ICH,
      &                LISTC(LMAX)
       COMMON/CHREG/  TIMEC,TMAX,RMAXC,CM(10),NAMEC(6),NSTEP1,KZ27,KZ30
-      REAL*4  XJ(3,6),VJ(3,6),BODYJ(6)
+      REAL*8  XJ(3,6),VJ(3,6),BODYJ(6)
 *
 *
 *       Save global address of all chain members in common array JLIST.
